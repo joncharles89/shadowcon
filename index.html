@@ -20,6 +20,26 @@
     <a href="map.html">Map</a>
     <a href="timetable.html">Timetable</a>
     <a href="login.html">Login</a>
+    <a onclick="toggleBP()">Battleplans</a>
+    <div id="battleplans" style="display:none;">
+      <br>Corpselight Plateau
+      <a href="" class="bplans">Har Umbrask</a>
+      <a href="" class="bplans">Kui'lodir Moor</a>
+      <br>Hwilc
+      <a href="" class="bplans">Burrhaven</a>
+      <a href="" class="bplans">Gloambrine Sands</a>
+      <a href="" class="bplans">Spithramurr Castle</a>
+      <br>Sorgian
+      <a href="" class="bplans">Barak Doonsian</a>
+      <a href="" class="bplans">Karak Kingsmouth</a>
+      <a href="" class="bplans">New Marzangrad</a>
+      <br>Stromhart
+      <a href="" class="bplans">Egredi</a>
+      <a href="" class="bplans">Ghastfall's Grove</a>
+      <a href="" class="bplans">Twilight Hammer</a>
+      <br>Ulubor's Wroth
+      <a href="" class="bplans">New Vorsprang's Bridge</a>
+    </div>
   </div>
   
   <div id="main">
@@ -29,12 +49,14 @@
   <script>
     function openNav() {
       document.getElementById("mySidenav").style.width = "250px";
-      //document.getElementById("main").style.marginLeft = "250px";
     }
 
     function closeNav() {
       document.getElementById("mySidenav").style.width = "0";
-      //document.getElementById("main").style.marginLeft= "0";
+    }
+    
+    function toggleBP() {
+      document.getElementById("battleplans").style.display = document.getElementById("battleplans").style.display == 'block' ? 'none' : 'block';
     }
   </script>
   

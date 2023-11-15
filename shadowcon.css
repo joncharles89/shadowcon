@@ -75,6 +75,7 @@ img {
 
 .sidenav a:hover {
   color: #f1f1f1;
+  cursor: pointer;
 }
 
 .sidenav .closebtn {
@@ -84,6 +85,12 @@ img {
   font-size: 5vh;
   margin-left: 50px;
 }
+
+#battleplans {
+  color: white;
+  font-size: 3vh;
+}
+
 /* Tweak sidebar for smaller screens */
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
