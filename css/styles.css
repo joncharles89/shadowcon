@@ -71,7 +71,10 @@ body::before {
         drop-shadow(0 0 28px rgba(153, 0, 0, 0.6));
 }
 
-/* Navigation */
+/* =========================
+   ShadowCon Navigation Theme
+   ========================= */
+
 .nav {
     text-align: center;
     margin-bottom: 30px;
@@ -79,50 +82,72 @@ body::before {
 
 .nav ul {
     list-style: none;
-    padding: 0;
+    padding: 12px 30px;
     margin: 0;
     display: inline-block;
-    border-top: 1px solid rgba(212, 175, 55, 0.4);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.4);
-    padding: 10px 25px;
-    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.03), transparent 60%);
+
+    /* Gold borders */
+    border-top: 2px solid rgba(212, 175, 55, 0.55);
+    border-bottom: 2px solid rgba(212, 175, 55, 0.55);
+
+    /* Subtle arcane glow */
+    background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.05), transparent 70%),
+        radial-gradient(circle at bottom, rgba(179, 0, 0, 0.10), transparent 70%);
+    box-shadow:
+        0 0 12px rgba(0, 0, 0, 0.9),
+        inset 0 0 8px rgba(212, 175, 55, 0.25);
 }
 
 .nav ul li {
     display: inline-block;
-    margin: 0 18px;
+    margin: 0 22px;
 }
 
 .nav ul li a {
     font-family: "Oswald", Arial, sans-serif;
-    font-size: 0.95rem;
-    letter-spacing: 0.16em;
+    font-size: 1rem;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     text-decoration: none;
+
+    /* Gold default */
     color: #d4af37;
+
     position: relative;
-    padding-bottom: 4px;
-    transition: color 0.2s ease;
+    padding-bottom: 6px;
+
+    transition: color 0.25s ease, text-shadow 0.25s ease;
 }
 
+/* Crimson underline animation */
 .nav ul li a::after {
     content: "";
     position: absolute;
     left: 0;
     bottom: 0;
-    height: 2px;
+
+    height: 3px;
     width: 0;
+
     background: linear-gradient(90deg, #b30000, #ff3333);
-    transition: width 0.25s ease;
+    box-shadow: 0 0 6px rgba(179, 0, 0, 0.8);
+
+    transition: width 0.3s ease;
 }
 
+/* Hover effects */
 .nav ul li a:hover {
     color: #ffcccc;
+    text-shadow:
+        0 0 6px rgba(212, 175, 55, 0.6),
+        0 0 12px rgba(179, 0, 0, 0.7);
 }
 
 .nav ul li a:hover::after {
     width: 100%;
 }
+
 
 /* Section headers */
 .content h1 {
