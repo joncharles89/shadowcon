@@ -1,63 +1,224 @@
-/* Global Styles */
+/* =========================
+   ShadowCon Global Theme
+   ========================= */
+
+/* Base */
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     padding: 0;
     background-color: #000;
-    color: #fff;
-    font-family: Arial, Helvetica, sans-serif;
+    color: #e5e5e5;
+    font-family: "Merriweather", Georgia, serif;
+}
+
+/* Typography */
+h1, h2, h3, h4 {
+    font-family: "Cinzel", "Times New Roman", serif;
+    color: #d4af37; /* burnt gold */
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 0;
+}
+
+p, li {
+    font-family: "Merriweather", Georgia, serif;
+    line-height: 1.6;
+    color: #c0c0c0;
+}
+
+/* Layout */
+.header {
+    padding: 40px 0 20px;
     text-align: center;
 }
 
-/* Header / Logo */
-.header {
-    padding: 40px 0 20px;
+.content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+    position: relative;
 }
 
+/* Subtle background texture */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 0%, rgba(255, 0, 0, 0.08), transparent 55%),
+        radial-gradient(circle at 80% 100%, rgba(255, 0, 0, 0.06), transparent 55%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03), transparent 60%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Logo */
 .logo {
-    max-width: 300px;
+    max-width: 320px;
     height: auto;
+    filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.9));
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.02);
+    filter:
+        drop-shadow(0 0 18px rgba(212, 175, 55, 0.7))
+        drop-shadow(0 0 28px rgba(153, 0, 0, 0.6));
 }
 
 /* Navigation */
+.nav {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
 .nav ul {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: inline-block;
+    border-top: 1px solid rgba(212, 175, 55, 0.4);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+    padding: 10px 25px;
+    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.03), transparent 60%);
 }
 
 .nav ul li {
     display: inline-block;
-    margin: 0 15px;
+    margin: 0 18px;
 }
 
 .nav ul li a {
-    color: #fff;
+    font-family: "Oswald", Arial, sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
     text-decoration: none;
-    font-size: 1.2rem;
-    letter-spacing: 1px;
+    color: #d4af37;
+    position: relative;
+    padding-bottom: 4px;
+    transition: color 0.2s ease;
+}
+
+.nav ul li a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 0;
+    background: linear-gradient(90deg, #b30000, #ff3333);
+    transition: width 0.25s ease;
 }
 
 .nav ul li a:hover {
-    color: #b30000; /* subtle red highlight */
+    color: #ffcccc;
 }
 
-/* Content */
-.content {
-    padding: 40px 20px;
-    max-width: 900px;
-    margin: 0 auto;
+.nav ul li a:hover::after {
+    width: 100%;
 }
 
+/* Section headers */
 .content h1 {
     font-size: 2rem;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+}
+
+.section-header {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.section-header::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, #d4af37, #b30000);
+    box-shadow: 0 0 8px rgba(179, 0, 0, 0.7);
+}
+
+/* Generic section styling */
+section {
+    margin-bottom: 40px;
+    padding: 20px 18px;
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.02), transparent 60%),
+        radial-gradient(circle at 0 100%, rgba(179, 0, 0, 0.12), transparent 55%);
+    box-shadow: 0 0 18px rgba(0, 0, 0, 0.8);
+}
+
+/* Links */
+a {
+    color: #ff6666;
+}
+
+a:hover {
+    color: #ff9999;
+}
+
+/* Buttons (for future use) */
+.btn {
+    display: inline-block;
+    padding: 10px 22px;
+    border-radius: 2px;
+    border: 1px solid #d4af37;
+    color: #d4af37;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-family: "Oswald", Arial, sans-serif;
+    font-size: 0.85rem;
+    background: rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    border-color: #ff3333;
+    color: #ffcccc;
+    box-shadow: 0 0 12px rgba(179, 0, 0, 0.8);
 }
 
 /* Footer */
 .footer {
-    margin-top: 60px;
-    padding: 20px 0;
-    border-top: 1px solid #333;
-    font-size: 1rem;
+    text-align: center;
+    padding: 18px 0 24px;
+    border-top: 1px solid rgba(80, 80, 80, 0.7);
+    font-size: 0.85rem;
     color: #888;
+    background: radial-gradient(circle at bottom, rgba(255, 255, 255, 0.03), transparent 60%);
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .logo {
+        max-width: 260px;
+    }
+
+    .nav ul {
+        display: block;
+        padding: 10px 10px;
+    }
+
+    .nav ul li {
+        display: block;
+        margin: 6px 0;
+    }
+
+    .content {
+        padding: 30px 14px 50px;
+    }
+
+    section {
+        padding: 16px 12px;
+    }
 }
