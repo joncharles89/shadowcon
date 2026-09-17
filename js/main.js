@@ -84,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+// Gallery modal functionality
 document.addEventListener("click", function(e) {
     if (e.target.matches(".gallery img")) {
 
@@ -104,7 +105,15 @@ document.addEventListener("click", function(e) {
         modal.addEventListener("click", () => modal.remove());
     }
 });
+// Close modal on Escape key
+document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+        const modal = document.querySelector(".gallery-modal");
+        if (modal) modal.remove();
+    }
+});
 
+// Highlight active menu link based on scroll position
 const sections = document.querySelectorAll(".content h1[id], .content h2[id]");
 const menuLinks = document.querySelectorAll(".mobile-submenu a");
 
@@ -129,6 +138,7 @@ function onScroll() {
     }
 }
 
+// Throttle scroll event for performance
 let ticking = false;
 
 document.addEventListener("scroll", () => {
@@ -141,6 +151,7 @@ document.addEventListener("scroll", () => {
     }
 });
 
+// Highlight active menu link on click
 menuLinks.forEach(link => {
     link.addEventListener("click", () => {
         menuLinks.forEach(l => l.classList.remove("active"));
