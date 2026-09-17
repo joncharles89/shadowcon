@@ -20,6 +20,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 burger.setAttribute("aria-expanded", "false");
             });
         });
+
+        // Expandable mobile submenu
+        const expandToggles = document.querySelectorAll(".expand-toggle");
+
+        expandToggles.forEach(toggle => {
+            toggle.addEventListener("click", () => {
+                const submenu = toggle.nextElementSibling;
+                const isOpen = submenu.classList.toggle("open");
+                toggle.classList.toggle("open");
+            });
+        });
+
+        document.querySelectorAll(".mobile-submenu a").forEach(link => {
+            link.addEventListener("click", () => {
+                mobileMenu.classList.remove("open");
+                burger.setAttribute("aria-expanded", "false");
+            });
+        });
+
     }
 
     initMobileNav();

@@ -51,6 +51,11 @@ p, li {
     line-height: 1.6;
 }
 
+a {
+    font-family: "Cinzel", serif;
+    color: #c7a96b; /* soft gold */
+}
+
 /* ---------------------------
    LAYOUT WRAPPER CONTENT
    --------------------------- */
@@ -71,6 +76,10 @@ p, li {
     text-align: center;
     margin: auto;
     width: 50%;
+}
+
+h2 {
+    scroll-margin-top: 100px; /* match your nav height */
 }
 
 /* ---------------------------
@@ -133,7 +142,7 @@ p, li {
     gap: 50px;
     padding: 0;
     margin: 0;
-
+    text-align: center;
     font-family: "Cinzel", serif;
 }
 
@@ -168,19 +177,34 @@ p, li {
     width: 100%;
 }
 
+/* Sword Icons */
 .nav-icon {
-    width: 50px;
-    height: 50px;
+    width: 50px;          /* adjust to taste */
+    height: auto;
     object-fit: contain;
     flex-shrink: 0;
+    filter: drop-shadow(0 0 6px rgba(0,0,0,0.6));
 }
 
+/* Flex ordering for perfect alignment */
 .nav-icon-left {
-    left: 35px;
+    order: 1;
+}
+
+.nav-links {
+    order: 2;
+}
+
+.nav-event-title {
+    order: 3;
 }
 
 .nav-icon-right {
-    right: 35px;
+    order: 4;
+}
+
+.burger {
+    order: 5;
 }
 
 .nav-event-title {
@@ -226,6 +250,65 @@ p, li {
     font-family: "Cinzel", serif;
     font-size: 1.1rem;
     letter-spacing: 0.12em;
+}
+
+/* Expandable mobile menu section */
+.mobile-expandable {
+    margin: 12px 0;
+}
+
+.expand-toggle {
+    background: none;
+    border: none;
+    color: #e2dfd7;
+    font-family: "Cinzel", serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+    text-align: left;
+    width: 100%;
+    padding: 10px 0;
+    cursor: pointer;
+}
+
+.expand-toggle::after {
+    content: "▼";
+    float: right;
+    transition: transform 0.3s ease;
+}
+
+.expand-toggle.open::after {
+    transform: rotate(180deg);
+}
+
+.mobile-submenu {
+    display: none;
+    flex-direction: column;
+    padding-left: 12px;
+    
+}
+
+.mobile-submenu.open {
+    display: flex;
+}
+
+.mobile-submenu li {
+    list-style: none;
+    position: relative;
+    padding-left: 22px;
+}
+
+.mobile-submenu li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 20px;
+    height: 20px;
+
+    background-image: url("/img/SwordIcon.svg"); /* or your future icon */
+    background-size: contain;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 0 4px rgba(0,0,0,0.6));
 }
 
 /* ---------------------------
