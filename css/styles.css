@@ -170,6 +170,11 @@ p, li {
     right: 35px;
 }
 
+.nav-event-title {
+    display: none;
+    height: 50px;
+}
+
 /* Burger Icon (hidden on desktop) */
 .burger {
     display: none;
@@ -222,6 +227,10 @@ p, li {
     }
 
     .nav-icon-left {
+        display: block;
+    }
+
+    .nav-event-title {
         display: block;
     }
 
