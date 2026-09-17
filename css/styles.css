@@ -10,13 +10,24 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-padding-top: 100px; /* match nav height */
+    scroll-behavior: smooth;
+}
+
+html, body {
+    height: 100%;
+}
+
 body {
     margin: 0;
     padding: 0;
-    padding-top: 60px; /* adjust between 80–120px depending on your nav height */
+    padding-top: 60px; /* adjust between 80–120px depending on nav height */
     background: #0b0b0b; /* deep black */
     color: #e2dfd7; /* bone text */
     font-family: "Merriweather", serif;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Textured black background */
@@ -68,18 +79,22 @@ a {
 .content {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 30px 20px 20px;
+    padding: 40px 20px 20px;
     position: relative;
+    flex: 1;
 }
 
 .content h1 {
     text-align: center;
-    margin: auto;
-    width: 50%;
+    margin: 0 auto 20px auto;
+    max-width: 600px;
 }
 
-h2 {
-    scroll-margin-top: 100px; /* match your nav height */
+.content::before {
+    content: "";
+    display: block;
+    height: 100px; /* same as scroll-margin-top */
+    margin-top: -100px;
 }
 
 /* ---------------------------
@@ -306,11 +321,25 @@ h2 {
     width: 20px;
     height: 20px;
 
-    background-image: url("/img/SwordIcon.svg"); /* or your future icon */
+    background-image: url("/img/SwordIcon.svg"); /* or future icon */
     background-size: contain;
     background-repeat: no-repeat;
     filter: drop-shadow(0 0 4px rgba(0,0,0,0.6));
 }
+
+.mobile-submenu a.active {
+    color: #c7a96b; /* soft gold */
+    font-weight: 600;
+}
+
+.mobile-submenu a.active::before {
+    content: "✦";
+    position: absolute;
+    left: -16px;
+    color: #c7a96b;
+    font-size: 1rem;
+}
+
 
 /* ---------------------------
    RESPONSIVE
@@ -495,7 +524,7 @@ h2 {
 
 .footer {
     text-align: center;
-    padding: 18px 0 24px;
+    padding: 18px 10px 24px;
     border-top: 1px solid rgba(80, 80, 80, 0.7);
     font-size: 0.85rem;
     color: #888;
