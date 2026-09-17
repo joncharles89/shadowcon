@@ -86,13 +86,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("click", function(e) {
     if (e.target.matches(".gallery img")) {
+
         const src = e.target.getAttribute("src");
+        const caption = e.target.getAttribute("data-caption") || "";
 
         const modal = document.createElement("div");
         modal.className = "gallery-modal";
         modal.innerHTML = `
             <div class="gallery-modal-inner">
                 <img src="${src}">
+                <p class="gallery-caption">${caption}</p>
             </div>
         `;
 
