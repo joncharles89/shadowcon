@@ -67,6 +67,12 @@ p, li {
     position: relative;
 }
 
+.content h1 {
+    text-align: center;
+    margin: auto;
+    width: 50%;
+}
+
 /* ---------------------------
    LOGO
    --------------------------- */
@@ -74,6 +80,13 @@ p, li {
 .logo {
     max-width: 320px;
     height: auto;
+    filter: none;
+    transition: none;
+}
+
+.logo-text {
+    max-width: auto;
+    height: 120px;
     filter: none;
     transition: none;
 }
