@@ -1,17 +1,12 @@
-// ShadowCon future scripts will go here
-console.log("ShadowCon site loaded");
-
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Detect if we are inside /pages
-    const basePath = window.location.pathname.includes("/pages/")
-        ? "../"
-        : "";
+    // Always load from root-level components folder
+    const basePath = "/components/";
 
     // Inject layout start
     const layoutStart = document.getElementById("layout-start");
     if (layoutStart) {
-        fetch(basePath + "components/layout-start.html")
+        fetch(basePath + "layout-start.html")
             .then(response => response.text())
             .then(html => {
                 layoutStart.innerHTML = html;
@@ -19,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Load logo
                 const logoTarget = document.getElementById("logo-placeholder");
                 if (logoTarget) {
-                    fetch(basePath + "components/logo.html")
+                    fetch(basePath + "logo.html")
                         .then(r => r.text())
                         .then(h => logoTarget.innerHTML = h);
                 }
@@ -27,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Load navigation
                 const navTarget = document.getElementById("nav-placeholder");
                 if (navTarget) {
-                    fetch(basePath + "components/nav.html")
+                    fetch(basePath + "nav.html")
                         .then(r => r.text())
                         .then(h => navTarget.innerHTML = h);
                 }
@@ -37,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Inject layout end
     const layoutEnd = document.getElementById("layout-end");
     if (layoutEnd) {
-        fetch(basePath + "components/layout-end.html")
+        fetch(basePath + "layout-end.html")
             .then(response => response.text())
             .then(html => {
                 layoutEnd.innerHTML = html;
