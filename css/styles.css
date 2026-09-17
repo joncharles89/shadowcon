@@ -13,6 +13,7 @@
 body {
     margin: 0;
     padding: 0;
+    padding-top: 40px; /* adjust between 80–120px depending on your nav height */
     background: #0b0b0b; /* deep black */
     color: #e2dfd7; /* bone text */
     font-family: "Merriweather", serif;
@@ -73,46 +74,57 @@ p, li {
 .logo {
     max-width: 320px;
     height: auto;
-    filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.9));
-    transition: transform 0.3s ease, filter 0.3s ease;
+    filter: none;
+    transition: none;
 }
 
 .logo:hover {
-    transform: scale(1.02);
-    filter:
-        drop-shadow(0 0 18px rgba(199, 169, 107, 0.7))
-        drop-shadow(0 0 28px rgba(153, 0, 0, 0.6));
+    transform: none;
+    filter: none;
 }
 
-/* ---------------------------
-   NAVIGATION (MATCHES YOUR IMAGE)
-   --------------------------- */
+/* ============================================================
+   FULL-WIDTH NAV BAR + MOBILE BURGER MENU
+   ============================================================ */
 
-.nav {
-    text-align: center;
-    margin-bottom: 40px;
-}
+.nav-container {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
 
-.nav ul {
-    list-style: none;
-    padding: 16px 40px;
-    margin: 0;
-    display: inline-flex;
-    gap: 50px;
-
-    background: #0f0f0f; /* deep black */
-    border-top: 3px solid #c7a96b; /* soft gold */
+    background: #0f0f0f;
     border-bottom: 3px solid #c7a96b;
 
     box-shadow:
         0 0 14px rgba(0, 0, 0, 0.8),
         inset 0 0 10px rgba(199, 169, 107, 0.25);
+}
+
+.nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 40px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Desktop Nav */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 50px;
+    padding: 0;
+    margin: 0;
 
     font-family: "Cinzel", serif;
 }
 
-.nav ul li a {
-    color: #e2dfd7; /* bone text */
+.nav-links li a {
+    color: #e2dfd7;
     text-decoration: none;
     font-size: 1.15rem;
     letter-spacing: 0.14em;
@@ -122,8 +134,7 @@ p, li {
     transition: color 0.25s ease;
 }
 
-/* Soft gold underline */
-.nav ul li a::after {
+.nav-links li a::after {
     content: "";
     position: absolute;
     left: 0;
@@ -131,18 +142,98 @@ p, li {
 
     height: 3px;
     width: 0;
-
     background: #c7a96b;
     transition: width 0.3s ease;
 }
 
-.nav ul li a:hover {
-    color: #c7a96b; /* soft gold */
+.nav-links li a:hover {
+    color: #c7a96b;
 }
 
-.nav ul li a:hover::after {
+.nav-links li a:hover::after {
     width: 100%;
 }
+
+/* Burger Icon (hidden on desktop) */
+.burger {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.burger span {
+    width: 28px;
+    height: 3px;
+    background: #e2dfd7;
+    border-radius: 2px;
+}
+
+/* Mobile Menu (hidden by default) */
+.mobile-menu {
+    display: none;
+    flex-direction: column;
+    list-style: none;
+    padding: 20px;
+    margin: 0;
+
+    background: #0f0f0f;
+    border-bottom: 3px solid #c7a96b;
+}
+
+.mobile-menu li {
+    margin: 12px 0;
+}
+
+.mobile-menu li a {
+    color: #e2dfd7;
+    text-decoration: none;
+    font-family: "Cinzel", serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+}
+
+/* ---------------------------
+   RESPONSIVE
+   --------------------------- */
+
+@media (max-width: 768px) {
+
+    .nav-inner {
+        justify-content: space-between;
+    }
+
+    .nav-links {
+        display: none; /* hide desktop nav */
+    }
+
+    .burger {
+        display: flex; /* show burger */
+    }
+
+    .mobile-menu {
+        display: none; /* JS will toggle this */
+    }
+
+    .mobile-menu.open {
+        display: flex;
+    }
+
+    .logo {
+        max-width: 260px;
+    }
+
+    .content {
+        padding: 30px 14px 50px;
+    }
+
+    .card {
+        padding: 18px 20px;
+    }
+}
+
+
 
 /* ---------------------------
    SECTION TITLES
@@ -250,33 +341,4 @@ p, li {
     font-size: 0.85rem;
     color: #888;
     background: #0f0f0f;
-}
-
-/* ---------------------------
-   RESPONSIVE
-   --------------------------- */
-
-@media (max-width: 768px) {
-    .logo {
-        max-width: 260px;
-    }
-
-    .nav ul {
-        display: block;
-        padding: 14px 20px;
-        gap: 20px;
-    }
-
-    .nav ul li {
-        display: block;
-        margin: 10px 0;
-    }
-
-    .content {
-        padding: 30px 14px 50px;
-    }
-
-    .card {
-        padding: 18px 20px;
-    }
 }
