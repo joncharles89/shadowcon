@@ -423,6 +423,25 @@ a {
 }
 
 /* ---------------------------
+   LAYOUT AIDS
+   --------------------------- */
+
+.three-image-row {
+    display: flex;
+    justify-content: center;      /* centre the whole row */
+    gap: 20px;                    /* even spacing between images */
+    margin: 40px auto;            /* centre the container itself */
+    width: fit-content;           /* shrink-wrap to images + gaps */
+}
+
+.three-image-row img {
+    width: 100px;                 /* or whatever size you want */
+    height: auto;
+    display: block;
+}
+
+
+/* ---------------------------
    CARDS
    --------------------------- */
 
