@@ -3,6 +3,27 @@ document.addEventListener("DOMContentLoaded", function () {
     // Always load from root-level components folder
     const basePath = "/components/";
 
+    function initMobileNav() {
+        const burger = document.getElementById("burger");
+        const mobileMenu = document.getElementById("mobileMenu");
+
+        if (!burger || !mobileMenu) return;
+
+        burger.addEventListener("click", () => {
+            const isOpen = mobileMenu.classList.toggle("open");
+            burger.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        mobileMenu.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                mobileMenu.classList.remove("open");
+                burger.setAttribute("aria-expanded", "false");
+            });
+        });
+    }
+
+    initMobileNav();
+
     // Inject layout start
     const layoutStart = document.getElementById("layout-start");
     if (layoutStart) {
@@ -24,7 +45,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (navTarget) {
                     fetch(basePath + "nav.html")
                         .then(r => r.text())
-                        .then(h => navTarget.innerHTML = h);
+                        .then(h => {
+                            navTarget.innerHTML = h;
+                            initMobileNav();
+                        });
                 }
             });
     }
@@ -37,16 +61,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(html => {
                 layoutEnd.innerHTML = html;
             });
-    }
-    
-    // Mobile burger menu toggle
-    const burger = document.getElementById("burger");
-    const mobileMenu = document.getElementById("mobileMenu");
-
-    if (burger && mobileMenu) {
-        burger.addEventListener("click", () => {
-            mobileMenu.classList.toggle("open");
-        });
     }
 
 });

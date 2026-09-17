@@ -13,7 +13,7 @@
 body {
     margin: 0;
     padding: 0;
-    padding-top: 40px; /* adjust between 80–120px depending on your nav height */
+    padding-top: 60px; /* adjust between 80–120px depending on your nav height */
     background: #0b0b0b; /* deep black */
     color: #e2dfd7; /* bone text */
     font-family: "Merriweather", serif;
@@ -110,6 +110,7 @@ p, li {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 40px;
 }
 
 /* Desktop Nav */
@@ -152,6 +153,21 @@ p, li {
 
 .nav-links li a:hover::after {
     width: 100%;
+}
+
+.nav-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.nav-icon-left {
+    left: 35px;
+}
+
+.nav-icon-right {
+    right: 35px;
 }
 
 /* Burger Icon (hidden on desktop) */
@@ -202,14 +218,24 @@ p, li {
 
     .nav-inner {
         justify-content: space-between;
+        padding: 12px 20px;
+    }
+
+    .nav-icon-left {
+        display: block;
+    }
+
+    .nav-icon-right {
+        display: none;
     }
 
     .nav-links {
-        display: none; /* hide desktop nav */
+        display: none;
     }
 
     .burger {
-        display: flex; /* show burger */
+        display: flex;
+        margin-left: 0;
     }
 
     .mobile-menu {
