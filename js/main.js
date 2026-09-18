@@ -159,3 +159,25 @@ menuLinks.forEach(link => {
     });
 });
 
+const filterButtons = document.querySelectorAll(".lore-filters button");
+const loreCards = document.querySelectorAll(".lore-card");
+
+filterButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        const filter = button.getAttribute("data-filter");
+
+        // Update active button styling
+        filterButtons.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+
+        loreCards.forEach(card => {
+            const categories = card.getAttribute("data-category").split(" ");
+
+            if (filter === "all" || categories.includes(filter)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+});
