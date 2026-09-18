@@ -405,16 +405,30 @@ a {
     }
 
     .lore-card {
-        flex-direction: column;
-        text-align: center;
+        flex-direction: row;      /* keep icon on the left */
+        align-items: flex-start;  /* allow text to stack naturally */
+        text-align: left;
     }
 
     .lore-icon {
-        margin: 0 0 12px;
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;       /* slightly tighter spacing */
     }
 
     .lore-text {
-        align-items: center;
+        flex: 1;                  /* take full remaining width */
+        display: flex;
+        flex-direction: column;   /* title above description */
+    }
+
+    .lore-text h3 {
+        flex: 1;
+        font-size: 1.1rem;
+    }
+
+    .lore-text p {
+        font-size: 0.9rem;
     }
 
     .parchment {
