@@ -21,14 +21,14 @@
         </div>
 
         <div class="lore-grid">
-            <a href="lore/story-a.html" class="lore-card" data-category="relicsoftherealms">
+            <a href="/pages/lore/story.html?id=whispering-gate" class="lore-card" data-category="relicsoftherealms">
                 <h3>Relics of the Realms - Prologue</h3>
-                <p>A tale of nonsense.</p>
+                <p>An introduction to our esteemed Emperor.</p>
             </a>
 
-            <a href="lore/story-b.html" class="lore-card" data-category="kallareborn">
-                <h3>Kalla Reborn - The Awakening</h3>
-                <p>When the ancient power stirred, the world trembled.</p>
+            <a href="/pages/lore/story.html?id=kalla-reborn" class="lore-card" data-category="kallareborn">
+                <h3>Kalla Reborn - Prologue</h3>
+                <p>Still to come...</p>
             </a>
         </div>
     </main>
@@ -36,6 +36,30 @@
     <div id="layout-end"></div>
 
     <script src="../js/main.js"></script>
+    <script>
+        const filterButtons = document.querySelectorAll(".lore-filters button");
+        const loreCards = document.querySelectorAll(".lore-card");
+
+        filterButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const filter = button.getAttribute("data-filter");
+
+                // Update active button styling
+                filterButtons.forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+
+                loreCards.forEach(card => {
+                    const categories = card.getAttribute("data-category").split(" ");
+
+                    if (filter === "all" || categories.includes(filter)) {
+                        card.style.display = "block";
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
 

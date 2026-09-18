@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShadowCon 2027 - Lore</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+    <div id="layout-start"></div>
+
+    <!-- Main Content -->
+    <main class="content">
+        <a href="/pages/lore.html" class="back-button">← Back to Lore</a>
+        <div id="story-container" class="parchment"></div>
+    </main>
+
+    <div id="layout-end"></div>
+
+    <script src="/js/main.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const storyId = params.get("id");
+
+            if (!storyId) return;
+
+            fetch(`/pages/lore/stories/${storyId}.html`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById("story-container").innerHTML = html;
+                })
+                .catch(() => {
+                    document.getElementById("story-container").innerHTML =
+                        "<p>Story not found.</p>";
+                });
+        });
+    </script>
+</body>
+</html>
+
+
