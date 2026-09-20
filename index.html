@@ -16,21 +16,34 @@
     <!-- Main Content -->
     <main class="content">
         <section id="event-details">
-            <!--<div class="video-wrapper">
+            <div class="video-wrapper">
                 <iframe
-                    src="https://www.youtube-nocookie.com/embed/S_N0K0hRg9M"
+                    src="https://www.youtube-nocookie.com/embed/kOo4NV4jLjw"
                     title="ShadowCon 2027 Announcement"
                     loading="lazy"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen>
                 </iframe>
-            </div> -->
-            <h1>Welcome!</h1>
+            </div>
+            <div id="story-container" class="parchment"></div>
         </section>
     </main>
 
     <div id="layout-end"></div>
 
     <script src="js/main.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch(`/pages/lore/stories/kalla-prologue.html`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById("story-container").innerHTML = html;
+                })
+                .catch(() => {
+                    document.getElementById("story-container").innerHTML =
+                        "<p>Story not found.</p>";
+                });
+        });
+    </script>
 </body>
 </html>

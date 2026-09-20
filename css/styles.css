@@ -227,6 +227,10 @@ a {
     height: 50px;
 }
 
+.nav-event-img {
+    height: 50px;
+}
+
 /* Burger Icon (hidden on desktop) */
 .burger {
     display: none;
@@ -348,16 +352,26 @@ a {
 @media (max-width: 768px) {
 
     .nav-inner {
-        justify-content: space-between;
+        justify-content: flex-start;
         padding: 12px 20px;
+        gap: 20px;
     }
 
     .nav-icon-left {
-        display: block;
+        order: 1;
     }
 
     .nav-event-title {
+        order: 2;
         display: block;
+        flex: 1;
+        text-align: center;
+    }
+
+    .burger {
+        order: 3;
+        margin-left: auto;
+        display: flex;
     }
 
     .nav-icon-right {
@@ -366,11 +380,6 @@ a {
 
     .nav-links {
         display: none;
-    }
-
-    .burger {
-        display: flex;
-        margin-left: 0;
     }
 
     .mobile-menu {
