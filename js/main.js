@@ -72,6 +72,14 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
+    // Load logo
+    const logoTarget = document.getElementById("logo-placeholder");
+    if (logoTarget) {
+        fetch(basePath + "logo.html")
+            .then(r => r.text())
+            .then(h => logoTarget.innerHTML = h);
+    }
+
     // Inject layout end
     const layoutEnd = document.getElementById("layout-end");
     if (layoutEnd) {
