@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Profile – ShadowCon</title>
+    <link rel="stylesheet" href="/styles.css">
+
+    <style>
+        .profile-container {
+            max-width: 600px;
+            margin: 80px auto;
+            background: #111;
+            border: 1px solid rgba(199,169,107,0.3);
+            padding: 30px;
+            border-radius: 6px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.6);
+        }
+
+        .profile-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-field {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #0f0f0f;
+            border: 1px solid rgba(199,169,107,0.3);
+            border-radius: 4px;
+            color: #e2dfd7;
+        }
+
+        .logout-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px 22px;
+            border: 2px solid #c7a96b;
+            background: #0f0f0f;
+            color: #e2dfd7;
+            font-family: "Cinzel", serif;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .logout-btn:hover {
+            background: #1a1a1a;
+            border-color: #a88952;
+            color: #c7a96b;
+        }
+
+        .not-logged-in {
+            text-align: center;
+            color: #c7a96b;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <div id="nav-placeholder"></div>
+    <script>
+        fetch('/components/nav.html')
+            .then(res => res.text())
+            .then(html => document.getElementById('nav-placeholder').innerHTML = html);
+    </script>
+
+    <div class="content">
+        <div id="profile-root"></div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+        const supabase = createClient(
+            'https://YOUR-PROJECT.supabase.co',
+            'YOUR-PUBLIC-ANON-KEY'
+        );
+
+        async function loadProfile() {
+            const root = document.getElementById('profile-root');
+
+            // Check login state
+            const { data: { user } } = await supabase.auth.getUser();
+
+            if (!user) {
+                root.innerHTML = `
+                    <div class="not-logged-in">
+                        <h2>You are not logged in</h2>
+                        <p><a href="/pages/login.html">Login here</a></p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Fetch profile data (optional)
+            let profileData = null;
+            try {
+                const { data } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', user.id)
+                    .single();
+
+                profileData = data;
+            } catch (e) {
+                // If no profile table exists, ignore
+            }
+
+            root.innerHTML = `
+                <div class="profile-container">
+                    <h1>Your Profile</h1>
+
+                    <div class="profile-field">
+                        <strong>Email:</strong><br>${user.email}
+                    </div>
+
+                    ${profileData ? `
+                        <div class="profile-field">
+                            <strong>Username:</strong><br>${profileData.username || "(none set)"}
+                        </div>
+
+                        <div class="profile-field">
+                            <strong>Joined:</strong><br>${new Date(profileData.created_at).toLocaleDateString()}
+                        </div>
+                    ` : `
+                        <div class="profile-field">
+                            <strong>No profile data found.</strong><br>
+                            Create a 'profiles' table to store user info.
+                        </div>
+                    `}
+
+                    <button class="logout-btn" id="logoutBtn">Logout</button>
+                </div>
+            `;
+
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                await supabase.auth.signOut();
+                window.location.href = "/index.html";
+            });
+        }
+
+        loadProfile();
+    </script>
+
+</body>
+</html>

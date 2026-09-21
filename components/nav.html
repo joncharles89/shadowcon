@@ -6,17 +6,21 @@
 
         <!-- Desktop Navigation -->
         <ul class="nav-links">
-            <li><a href="../index.html">Home</a></li>
+            <li><a href="/index.html">Home</a></li>
             <li><a href="/pages/event-details.html">Event Details</a></li>
             <li><a href="/pages/lore.html">Lore</a></li>
             <li><a href="/pages/gallery.html">Gallery</a></li>
             <li><a href="/pages/video.html">Video</a></li>
-            <!-- <li><a href="/pages/player-pack.html">Player Pack</a></li> -->
             <li><a href="/pages/contact.html">Contact</a></li>
+
+            <!-- Session-aware desktop item -->
+            <li id="nav-auth-desktop"></li>
         </ul>
 
         <!-- Event Title (mobile only) -->
-        <a href="/index.html" class="nav-event-title"><img src="/img/2027LogoTextOnly.png" alt="" class="nav-event-img"></a>
+        <a href="/index.html" class="nav-event-title">
+            <img src="/img/2027LogoTextOnly.png" alt="" class="nav-event-img">
+        </a>
 
         <!-- Right Sword Icon -->
         <img src="/img/SwordIcon.svg" alt="" class="nav-icon nav-icon-right">
@@ -33,6 +37,7 @@
     <!-- Mobile Dropdown -->
     <ul class="mobile-menu" id="mobileMenu">
         <li><a href="/index.html">Home</a></li>
+
         <li class="mobile-expandable">
             <button class="expand-toggle">Event Details</button>
             <ul class="mobile-submenu">
@@ -46,10 +51,67 @@
                 <li><a href="/pages/event-details.html#interested">Interested?</a></li>
             </ul>
         </li>
+
         <li><a href="/pages/lore.html">Lore</a></li>
         <li><a href="/pages/gallery.html">Gallery</a></li>
         <li><a href="/pages/video.html">Video</a></li>
-        <!-- <li><a href="/pages/player-pack.html">Player Pack</a></li> -->
         <li><a href="/pages/contact.html">Contact</a></li>
+
+        <!-- Session-aware mobile item -->
+        <li id="nav-auth-mobile"></li>
     </ul>
 </div>
+
+<!-- Supabase Session-Aware Navigation -->
+<script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+    const supabase = createClient(
+        'https://yypfjlnlwilzzvpgtbwa.supabase.co',
+        'sb_publishable_G-_r-PPQyg1CN1CwHQuqnQ_8l41VzeK'
+    );
+
+    async function updateNavAuth() {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        const desktop = document.getElementById('nav-auth-desktop');
+        const mobile = document.getElementById('nav-auth-mobile');
+
+        if (user) {
+            // Logged in
+            desktop.innerHTML = `
+                <a href="/pages/profile.html">Profile</a> |
+                <a href="#" id="logoutLink">Logout</a>
+            `;
+
+            mobile.innerHTML = `
+                <a href="/pages/profile.html">Profile</a>
+                <a href="#" id="logoutLinkMobile">Logout</a>
+            `;
+        } else {
+            // Logged out
+            desktop.innerHTML = `<a href="/pages/login.html">Login</a>`;
+            mobile.innerHTML = `<a href="/pages/login.html">Login</a>`;
+        }
+
+        // Logout handlers
+        const logoutDesktop = document.getElementById('logoutLink');
+        const logoutMobile = document.getElementById('logoutLinkMobile');
+
+        if (logoutDesktop) {
+            logoutDesktop.addEventListener('click', async () => {
+                await supabase.auth.signOut();
+                window.location.reload();
+            });
+        }
+
+        if (logoutMobile) {
+            logoutMobile.addEventListener('click', async () => {
+                await supabase.auth.signOut();
+                window.location.reload();
+            });
+        }
+    }
+
+    updateNavAuth();
+</script>

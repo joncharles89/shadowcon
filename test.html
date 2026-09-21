@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Supabase Test</h1>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+
+  const supabase = createClient(
+    'https://yypfjlnlwilzzvpgtbwa.supabase.co',
+    'sb_publishable_G-_r-PPQyg1CN1CwHQuqnQ_8l41VzeK'
+  );
+
+  async function test() {
+    const { data, error } = await supabase.from('profiles').select('*');
+    document.body.innerHTML += `<pre>${JSON.stringify({data, error}, null, 2)}</pre>`;
+  }
+
+  async function testAuth() {
+    const { data, error } = await supabase.auth.signUp({
+      email: "divineauthority@hotmail.com",
+      password: "password123"
+    });
+
+    console.log("DATA:", data);
+    console.log("ERROR:", error);
+  }
+
+  async function testLogin() {
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: "divineauthority@hotmail.com",
+        password: "password123"
+    });
+
+    console.log("LOGIN DATA:", data);
+    console.log("LOGIN ERROR:", error);
+    }
+
+    const { data: { user } } = await supabase.auth.getUser();
+    console.log("CURRENT USER:", user);
+
+  //test();
+  testLogin();
+</script>
+
+</body>
+</html>
