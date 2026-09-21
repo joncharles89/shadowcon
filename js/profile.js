@@ -48,11 +48,7 @@ export async function loadProfile() {
                 </div>
 
                 <div class="profile-field">
-                    <strong>Joined:</strong><br>${new Date(profileData.created_at).toLocaleDateString()}
-                </div>
-
-                <div class="profile-field">
-                    <strong>Bio:</strong><br>${profileData.bio || "(none set)"}
+                    <strong>Team:</strong><br>${profileData.team || "(none set)"}
                 </div>
             ` : `
                 <div class="profile-field">
