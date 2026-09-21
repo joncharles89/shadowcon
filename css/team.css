@@ -1,0 +1,47 @@
+/* ---------- Team    ---------- */
+
+.team-message {
+    margin-top: 16px;
+    text-align: center;
+    color: #c7a96b;
+    font-size: 0.95rem;
+}
+
+.team-rebels {
+    background: #1a1f2b;
+    border: 1px solid #3a4a6a;
+}
+
+.team-emperor {
+    background: #2b1a1a;
+    border: 1px solid #6a3a3a;
+}
+
+.team-kalla {
+    background: #1a2b1f;
+    border: 1px solid #3a6a4a;
+}
+
+#teamPageWrapper {
+    flex: 1;
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+.team-button {
+    background: #c7a96b;          /* gold background */
+    color: #111;                  /* black text */
+    border: 2px solid #c7a96b;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    margin-bottom: 16px;
+    padding: 12px;
+    border-radius: 4px;
+}
+
+/* Hover effect */
+.team-button:hover {
+    background: #d8b97a;          /* lighter gold */
+    transform: scale(1.02);
+    box-shadow: 0 0 12px rgba(199,169,107,0.4);
+}

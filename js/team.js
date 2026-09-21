@@ -1,8 +1,16 @@
 import { supabase } from '/js/supabaseClient.js';
 
+function toTitleCase(str) {
+  return str.replace(
+    /\w\S*/g,
+    text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+  );
+}
+
 export async function initTeamPage() {
     const teamMessage = document.getElementById('teamMessage');
     const teamImageWrapper = document.getElementById('teamImageWrapper');
+    const teamPageWrapper = document.getElementById('teamPageWrapper');
 
     // 1. Check login state
     const { data: { user } } = await supabase.auth.getUser();
@@ -33,14 +41,18 @@ export async function initTeamPage() {
         return;
     }
 
-    // 4. Team assigned → show image
-    teamMessage.textContent = `You are on Team ${profile.team.toUpperCase()}.`;
+    // 4. Team assigned → apply background + show image
+    const team = profile.team.toLowerCase();
+
+    teamPageWrapper.classList.add(`team-${team}`);
+
+    teamMessage.innerHTML = `<h1>Team ${toTitleCase(team)}</h1>`;
     teamMessage.style.color = "#c7a96b";
 
     const teamImages = {
-        Rebel: "/img/teams/alpha.png",
-        Emperor: "/img/teams/beta.png",
-        Kalla: "/img/teams/gamma.png"
+        rebels: "/img/teams/alpha.png",
+        emperor: "/img/teams/beta.png",
+        kalla: "/img/teams/gamma.png"
     };
 
     const imgSrc = teamImages[profile.team];
@@ -52,7 +64,7 @@ export async function initTeamPage() {
 
     teamImageWrapper.innerHTML = `
         <img src="${imgSrc}" 
-             alt="Team ${profile.team}" 
+             alt="Team ${team}" 
              style="max-width:300px; border:1px solid rgba(199,169,107,0.3); border-radius:6px;">
     `;
 }

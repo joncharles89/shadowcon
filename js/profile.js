@@ -46,10 +46,11 @@ export async function loadProfile() {
                 <div class="profile-field">
                     <strong>Username:</strong><br>${profileData.username || "(none set)"}
                 </div>
-
-                <div class="profile-field">
-                    <strong>Team:</strong><br>${profileData.team || "(none set)"}
-                </div>
+                <a href="/pages/team.html" style="text-decoration:none; color:inherit;">
+                    <div class="team-button">
+                        <strong>Team:</strong><br>${profileData.team || "(none set)"}
+                    </div>
+                </a>
             ` : `
                 <div class="profile-field">
                     <strong>No profile data found.</strong><br>

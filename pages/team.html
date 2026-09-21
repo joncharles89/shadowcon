@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShadowCon – Your Team</title>
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="/css/team.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
@@ -22,12 +22,17 @@
 
     <div id="nav-placeholder"></div>
     <script type="module" src="/js/nav.js"></script>
+    
+    <div id="teamPageWrapper" id="teamPageWrapper">
+        <main class="content">
+            <div id="teamMessage" class="team-message"></div>
+            <div id="teamImageWrapper" style="text-align:center; margin-top:20px;"></div>
+        </main>
+    </div>
 
-    <main class="content">
-        <h1>Your Team</h1>
-        <div id="teamMessage" class="register-message"></div>
-        <div id="teamImageWrapper" style="text-align:center; margin-top:20px;"></div>
-    </main>
+    <div id="layout-end"></div>
+
+    <script src="/js/main.js"></script>
 
     <script type="module">
         import { initTeamPage } from '/js/team.js';
