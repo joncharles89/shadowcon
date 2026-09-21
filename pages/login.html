@@ -2,79 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login – ShadowCon</title>
-    <link rel="stylesheet" href="/styles.css">
-
-    <!-- Supabase JS -->
-    <script type="module">
-        import { createClient } from 'https://esm.sh/@supabase/supabase-js';
-
-        window.supabase = createClient(
-            'https://YOUR-PROJECT.supabase.co',
-            'YOUR-PUBLIC-ANON-KEY'
-        );
-    </script>
-
-    <style>
-        /* Page-specific layout */
-        .login-container {
-            max-width: 420px;
-            margin: 80px auto;
-            background: #111;
-            border: 1px solid rgba(199,169,107,0.3);
-            padding: 30px;
-            border-radius: 6px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.6);
-        }
-
-        .login-container h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .login-container label {
-            display: block;
-            margin-bottom: 6px;
-            color: #c7a96b;
-            font-family: "Cinzel", serif;
-            letter-spacing: 0.08em;
-        }
-
-        .login-container input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 18px;
-            border: 1px solid rgba(199,169,107,0.3);
-            background: #0f0f0f;
-            color: #e2dfd7;
-            border-radius: 4px;
-        }
-
-        .login-container .btn {
-            width: 100%;
-            text-align: center;
-        }
-
-        .login-message {
-            margin-top: 16px;
-            text-align: center;
-            color: #c7a96b;
-            font-size: 0.95rem;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShadowCon - Login</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/auth.css">
 </head>
 
 <body>
-
-    <!-- NAV -->
+    
     <div id="nav-placeholder"></div>
-    <script>
-        fetch('/components/nav.html')
-            .then(res => res.text())
-            .then(html => document.getElementById('nav-placeholder').innerHTML = html);
-    </script>
+    <script type="module" src="/js/nav.js"></script>
 
-    <div class="content">
+    <main class="content">
         <div class="login-container">
             <h1>Login</h1>
 
@@ -92,15 +31,14 @@
                 <a href="/pages/register.html">Create an account</a>
             </p>
         </div>
-    </div>
+    </main>
 
     <script type="module">
-        import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+        import { supabase } from '/js/supabaseClient.js';
+        import { redirectIfLoggedIn } from '/js/auth.js';
 
-        const supabase = createClient(
-            'https://YOUR-PROJECT.supabase.co',
-            'YOUR-PUBLIC-ANON-KEY'
-        );
+        // Prevent logged-in users from seeing the login page
+        redirectIfLoggedIn();
 
         const loginBtn = document.getElementById('loginBtn');
         const loginMessage = document.getElementById('loginMessage');
@@ -123,9 +61,8 @@
                 loginMessage.textContent = "Login successful!";
                 loginMessage.style.color = "#c7a96b";
 
-                // Redirect to homepage or profile
                 setTimeout(() => {
-                    window.location.href = "/index.html";
+                    window.location.href = "/pages/profile.html";
                 }, 800);
             }
         });

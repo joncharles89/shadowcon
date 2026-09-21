@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShadowCon - Register</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+
+<body>
+
+    <div id="nav-placeholder"></div>
+    <script type="module" src="/js/nav.js"></script>
+
+    <!-- Main Content -->
+    <main class="content">
+        <div class="register-container">
+            <h1>Create Account</h1>
+
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@example.com">
+
+            <label for="password">Password</label>
+            <input id="password" type="password" placeholder="••••••••">
+
+            <button class="btn" id="registerBtn">Register</button>
+
+            <div class="register-message" id="registerMessage"></div>
+
+            <p style="text-align:center; margin-top:20px;">
+                <a href="/pages/login.html">Already have an account?</a>
+            </p>
+        </div>
+    </main>
+
+    <div id="layout-end"></div>
+
+    <!-- Registration Logic -->
+    <script type="module">
+        import { initRegisterForm } from '/js/register.js';
+        initRegisterForm();
+    </script>
+</body>
+</html>
+
+

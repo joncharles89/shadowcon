@@ -1,47 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Email – ShadowCon</title>
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <style>
+        .test-container {
+            max-width: 420px;
+            margin: 80px auto;
+            background: #111;
+            border: 1px solid rgba(199,169,107,0.3);
+            padding: 30px;
+            border-radius: 6px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.6);
+        }
+
+        .test-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .test-container label {
+            display: block;
+            margin-bottom: 6px;
+            color: #c7a96b;
+            font-family: "Cinzel", serif;
+            letter-spacing: 0.08em;
+        }
+
+        .test-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 18px;
+            border: 1px solid rgba(199,169,107,0.3);
+            background: #0f0f0f;
+            color: #e2dfd7;
+            border-radius: 4px;
+        }
+
+        .test-container .btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        .test-message {
+            margin-top: 16px;
+            text-align: center;
+            color: #c7a96b;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+
 <body>
-<h1>Supabase Test</h1>
 
-<script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+    <div id="nav-placeholder"></div>
+    <script type="module" src="/js/nav.js"></script>
+    
+    <!-- Test Email Logic -->
+    <script type="module">
+        import { supabase } from '/js/supabaseClient.js';
 
-  const supabase = createClient(
-    'https://yypfjlnlwilzzvpgtbwa.supabase.co',
-    'sb_publishable_G-_r-PPQyg1CN1CwHQuqnQ_8l41VzeK'
-  );
+        const btn = document.getElementById('testEmailBtn');
+        const msg = document.getElementById('testMessage');
 
-  async function test() {
-    const { data, error } = await supabase.from('profiles').select('*');
-    document.body.innerHTML += `<pre>${JSON.stringify({data, error}, null, 2)}</pre>`;
-  }
+        btn.addEventListener('click', async () => {
+            msg.textContent = "Sending email...";
 
-  async function testAuth() {
-    const { data, error } = await supabase.auth.signUp({
-      email: "divineauthority@hotmail.com",
-      password: "password123"
-    });
+            const email = document.getElementById('email').value.trim();
 
-    console.log("DATA:", data);
-    console.log("ERROR:", error);
-  }
+            const { data, error } = await supabase.auth.resetPasswordForEmail(email);
 
-  async function testLogin() {
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email: "divineauthority@hotmail.com",
-        password: "password123"
-    });
+            if (error) {
+                msg.textContent = error.message;
+                msg.style.color = "#c76b6b"; // soft red
+            } else {
+                msg.textContent = "Email sent! Check your inbox.";
+                msg.style.color = "#c7a96b";
+            }
+        });
 
-    console.log("LOGIN DATA:", data);
-    console.log("LOGIN ERROR:", error);
-    }
+        console.log("Supabase client:", supabase);
+    </script>
 
-    const { data: { user } } = await supabase.auth.getUser();
-    console.log("CURRENT USER:", user);
+    <div class="content">
+        <div class="test-container">
+            <h1>Test SMTP Email</h1>
 
-  //test();
-  testLogin();
-</script>
+            <label for="email">Your Email</label>
+            <input id="email" type="email" placeholder="you@example.com">
+
+            <button class="btn" id="testEmailBtn">Send Reset Password Email</button>
+
+            <div class="test-message" id="testMessage"></div>
+        </div>
+    </div>
+
+    
 
 </body>
 </html>
