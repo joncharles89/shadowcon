@@ -25,20 +25,62 @@
     <!-- Main Content -->
     <main class="content">
         <h1>Video</h1>
-        <div class="video-wrapper">
-            <iframe
-                src="https://www.youtube-nocookie.com/embed/291Jgl5ime4"
-                title="ShadowCon 2025 Intro"
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-            </iframe>
+        <div class="video-filters">
+            <button data-filter="all" class="active">All</button>
+            <button data-filter="relicsoftherealms">Relics of the Realms</button>
+            <!-- <button data-filter="kallareborn">Kalla Reborn</button> -->
+        </div>
+        <div class="video-grid">
+            <div class="video-card" data-category="relicsoftherealms">
+                <iframe
+                    src="https://www.youtube-nocookie.com/embed/291Jgl5ime4"
+                    title="ShadowCon 2025 Intro"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <div class="video-card" data-category="relicsoftherealms">
+                <iframe
+                    src="https://www.youtube-nocookie.com/embed/dj9H2CxeDSo"
+                    title="ShadowCon 2025 Outro"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
         </div>
     </main>
 
     <div id="layout-end"></div>
 
     <script src="/js/main.js"></script>
+
+    <script>
+        const filterButtons = document.querySelectorAll(".video-filters button");
+        const videoCards = document.querySelectorAll(".video-card");
+
+        filterButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const filter = button.getAttribute("data-filter");
+
+                // Update active button styling
+                filterButtons.forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+
+                videoCards.forEach(card => {
+                    const categories = card.getAttribute("data-category").split(" ");
+
+                    if (filter === "all" || categories.includes(filter)) {
+                        card.style.display = "flex";
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
 
