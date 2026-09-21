@@ -6,6 +6,16 @@
     <title>ShadowCon - Login</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/auth.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="manifest" href="/icons/site.webmanifest">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#c9a86a">
+    <link rel="shortcut icon" href="/icons/favicon.ico">
+
+    <meta name="msapplication-TileColor" content="#111111">
+    <meta name="msapplication-config" content="/icons/browserconfig.xml">
+    <meta name="theme-color" content="#111111">
 </head>
 
 <body>
@@ -21,7 +31,12 @@
             <input id="email" type="email" placeholder="you@example.com">
 
             <label for="password">Password</label>
-            <input id="password" type="password" placeholder="••••••••">
+            <div class="password-wrapper">
+                <input id="password" type="password" placeholder="••••••••">
+                <button type="button" id="togglePassword" class="toggle-password" aria-label="Show password">
+                    <span class="eye-icon"></span>
+                </button>
+            </div>
 
             <button class="btn" id="loginBtn">Login</button>
 
@@ -66,6 +81,17 @@
                 }, 800);
             }
         });
+
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = togglePassword.querySelector('.eye-icon');
+
+        togglePassword.addEventListener('click', () => {
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+            eyeIcon.classList.toggle('closed', !isPassword);
+        });
+
     </script>
 
 </body>

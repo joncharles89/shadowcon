@@ -26,7 +26,7 @@ export async function loadProfile() {
         const { data } = await supabase
             .from('profiles')
             .select('*')
-            .eq('id', user.id)
+            .eq('user_id', user.id)
             .single();
 
         profileData = data;
