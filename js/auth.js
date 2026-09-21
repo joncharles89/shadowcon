@@ -1,7 +1,7 @@
 import { supabase } from '/js/supabaseClient.js';
 
 /**
- * Get the currently logged-in user
+ * Get the currently logged‑in user (returns null if not logged in)
  */
 export async function getUser() {
     const { data: { user } } = await supabase.auth.getUser();
@@ -9,9 +9,10 @@ export async function getUser() {
 }
 
 /**
- * Redirect to login page if user is not logged in
+ * Redirect logged‑out users away from protected pages
+ * (profile, update-profile, event registration, etc.)
  */
-export async function requireLogin() {
+export async function redirectIfLoggedOut() {
     const user = await getUser();
     if (!user) {
         window.location.href = '/pages/login.html';
@@ -19,7 +20,7 @@ export async function requireLogin() {
 }
 
 /**
- * Redirect logged-in users away from login/register pages
+ * Redirect logged‑in users away from login/register pages
  */
 export async function redirectIfLoggedIn() {
     const user = await getUser();
@@ -29,9 +30,18 @@ export async function redirectIfLoggedIn() {
 }
 
 /**
- * Log out and reload the page
+ * Require login but do NOT redirect — returns boolean
+ * Useful for pages that behave differently depending on login state
+ */
+export async function requireLogin() {
+    const user = await getUser();
+    return !!user;
+}
+
+/**
+ * Log out and redirect to login page
  */
 export async function logout() {
     await supabase.auth.signOut();
-    window.location.reload();
+    window.location.href = '/pages/login.html';
 }

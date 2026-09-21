@@ -26,7 +26,7 @@ export async function loadProfile() {
         const { data } = await supabase
             .from('profiles')
             .select('*')
-            .eq('user_id', user.id)
+            .eq('id', user.id)
             .single();
 
         profileData = data;
@@ -50,13 +50,19 @@ export async function loadProfile() {
                 <div class="profile-field">
                     <strong>Joined:</strong><br>${new Date(profileData.created_at).toLocaleDateString()}
                 </div>
+
+                <div class="profile-field">
+                    <strong>Bio:</strong><br>${profileData.bio || "(none set)"}
+                </div>
             ` : `
                 <div class="profile-field">
                     <strong>No profile data found.</strong><br>
                     Create a 'profiles' table to store user info.
                 </div>
             `}
-
+            <a href="/pages/update-profile.html" class="logout-btn" style="margin-top: 10px; margin-bottom: 12px; display:block;">
+                Update Profile
+            </a>
             <button class="logout-btn" id="logoutBtn">Logout</button>
         </div>
     `;
