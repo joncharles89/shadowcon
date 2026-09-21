@@ -23,14 +23,14 @@ async function updateNavAuth() {
 
     if (user) {
         desktop.innerHTML = `
-            <a href="/pages/profile.html">Profile</a> |
-            <a href="#" id="logoutLink">Logout</a>
-        `;
+            <a href="/pages/profile.html">Profile</a>`
+            //| <a href="#" id="logoutLink">Logout</a>`
+        ;
 
         mobile.innerHTML = `
-            <a href="/pages/profile.html">Profile</a> | 
-            <a href="#" id="logoutLinkMobile">Logout</a>
-        `;
+            <a href="/pages/profile.html">Profile</a>`
+            //| <a href="#" id="logoutLinkMobile">Logout</a>`
+        ;
     } else {
         desktop.innerHTML = `<a href="/pages/login.html">Login</a>`;
         mobile.innerHTML = `<a href="/pages/login.html">Login</a>`;

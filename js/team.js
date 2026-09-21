@@ -46,16 +46,22 @@ export async function initTeamPage() {
 
     teamPageWrapper.classList.add(`team-${team}`);
 
-    teamMessage.innerHTML = `<h1>Team ${toTitleCase(team)}</h1>`;
+    const teamNames = {
+        rebels: "Rebel Forces",
+        emperor: "Emperor Vaelon",
+        kalla: "Kalla's Strike Force"
+    };
+
+    teamMessage.innerHTML = `<h1>${toTitleCase(teamNames[team])}</h1>`;
     teamMessage.style.color = "#c7a96b";
 
     const teamImages = {
         rebels: "/img/teams/alpha.png",
-        emperor: "/img/teams/beta.png",
+        emperor: "/img/factions/TriadWhite.svg",
         kalla: "/img/teams/gamma.png"
     };
 
-    const imgSrc = teamImages[profile.team];
+    const imgSrc = teamImages[team];
 
     if (!imgSrc) {
         teamImageWrapper.innerHTML = `<p style="color:#c76b6b;">Team image not found.</p>`;
@@ -65,6 +71,6 @@ export async function initTeamPage() {
     teamImageWrapper.innerHTML = `
         <img src="${imgSrc}" 
              alt="Team ${team}" 
-             style="max-width:300px; border:1px solid rgba(199,169,107,0.3); border-radius:6px;">
+             style="max-width:300px;">
     `;
 }
