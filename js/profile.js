@@ -56,9 +56,9 @@ export async function loadProfile() {
                     Create a 'profiles' table to store user info.
                 </div>
             `}
-            <a href="/pages/update-profile.html" class="logout-btn" style="margin-top: 10px; margin-bottom: 12px; display:block;">
+            <!--<a href="/pages/update-profile.html" class="logout-btn" style="margin-top: 10px; margin-bottom: 12px; display:block;">
                 Update Profile
-            </a>
+            </a> -->
             <button class="logout-btn" id="logoutBtn">Logout</button>
         </div>
     `;

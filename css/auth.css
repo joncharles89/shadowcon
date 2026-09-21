@@ -172,6 +172,16 @@
     margin-bottom: 18px; /* restores spacing before Login button */
 }
 
+.forgot-link {
+    color: #c7a96b;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
 .toggle-password {
     position: absolute;
     top: 35%;
