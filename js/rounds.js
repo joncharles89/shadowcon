@@ -7,10 +7,27 @@ import { getUser } from '/js/auth.js';
  */
 const DEFAULT_EVENT_ID = "369a1d4a-283f-41d6-bfc2-f83cee4b7818";
 
+const TEAM_ICONS = {
+    "rebels": "/img/factions/TriadWhite.svg",
+    "emperor": "/img/factions/TriadWhite.svg",
+    "kalla": "/img/factions/TriadWhite.svg"
+};
+
 function getEventId() {
     const params = new URLSearchParams(window.location.search);
     return params.get('event_id') || DEFAULT_EVENT_ID;
     //return DEFAULT_EVENT_ID;
+}
+
+function getTeamIcon(teamObj) {
+    if (!teamObj || !teamObj.name) {
+        return null;
+    }
+
+    const key = teamObj.name.toLowerCase();
+    const icon = TEAM_ICONS[key] || null;
+    
+    return icon;
 }
 
 async function loadEventInfo() {
@@ -69,6 +86,14 @@ async function loadEventInfo() {
             player2:profiles!event_pairings_player2_id_fkey (
                 name,
                 army_name
+            ),
+            team1:teams!event_pairings_player1_team_id_fkey (
+                id,
+                name
+            ),
+            team2:teams!event_pairings_player2_team_id_fkey (
+                id,
+                name
             )
         `)
         .eq('event_id', eventId)
@@ -115,6 +140,12 @@ function renderPairingCard(p, user) {
     const player1Score = p.player1_score;
     const player2Score = p.player2_score;
 
+    const player1Team = p.team1;
+    const player2Team = p.team2;
+
+    const player1Icon = getTeamIcon(player1Team);
+    const player2Icon = getTeamIcon(player2Team);
+
     const bothScoresExist =
         player1Score !== null &&
         player1Score !== undefined &&
@@ -148,10 +179,12 @@ function renderPairingCard(p, user) {
             <div class="round-grid">
 
                 <div class="round-label">
+                    ${player1Icon ? `<img class="team-icon" src="${player1Icon}" alt="${escapeHtml(p.team1.name)}">` : ""}
                     ${escapeHtml(player1Name)}
                 </div>
 
                 <div class="round-label">
+                    ${player2Icon ? `<img class="team-icon" src="${player2Icon}" alt="${escapeHtml(p.team2.name)}">` : ""}
                     ${escapeHtml(player2Name)}
                 </div>
 
