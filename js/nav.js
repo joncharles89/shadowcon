@@ -21,22 +21,35 @@ async function updateNavAuth() {
 
     if (!desktop || !mobile) return;
 
+    let isAdmin = false;
+
+    if (user) {
+        // Check admin table
+        const { data: adminRow } = await supabase
+            .from("admins")
+            .select("id")
+            .eq("id", user.id)
+            .single();
+
+        isAdmin = !!adminRow;
+    }
+
     if (user) {
         desktop.innerHTML = `
-            <a href="/pages/profile.html">Profile</a>`
-            //| <a href="#" id="logoutLink">Logout</a>`
-        ;
+            <a href="/pages/profile.html">Profile</a>
+            ${isAdmin ? ` | <a href="/pages/admin.html">Admin</a>` : ""}
+        `;
 
         mobile.innerHTML = `
-            <a href="/pages/profile.html">Profile</a>`
-            //| <a href="#" id="logoutLinkMobile">Logout</a>`
-        ;
+            <a href="/pages/profile.html">Profile</a> | 
+            ${isAdmin ? `<a href="/pages/admin.html">Admin</a>` : ""}
+        `;
     } else {
         desktop.innerHTML = `<a href="/pages/login.html">Login</a>`;
         mobile.innerHTML = `<a href="/pages/login.html">Login</a>`;
     }
 
-    // Logout handlers
+    // Logout handlers (unchanged)
     const logoutDesktop = document.getElementById('logoutLink');
     const logoutMobile = document.getElementById('logoutLinkMobile');
 
@@ -54,6 +67,7 @@ async function updateNavAuth() {
         });
     }
 }
+
 
 function activateMobileMenu() {
     const burger = document.getElementById('burger');
