@@ -1,0 +1,61 @@
+.round-card {
+    background: #111;
+    border: 1px solid rgba(199,169,107,0.3);
+    padding: 24px 28px;
+    margin: 30px 0;
+    border-radius: 6px;
+    box-shadow: 0 0 14px rgba(0,0,0,0.7);
+}
+
+.round-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.round-header h2 {
+    margin: 0;
+}
+
+.round-table {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #c7a96b;
+    font-family: "Cinzel", serif;
+    letter-spacing: 0.05em;
+}
+
+.round-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+    text-align: center;
+}
+
+.round-grid div {
+    font-family: "Merriweather", serif;
+    color: #e2dfd7;
+}
+
+.round-label {
+    font-weight: bold;
+    color: #c7a96b;
+}
+
+.score-form-inline {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.score-form-inline input {
+    width: 80px;
+    padding: 6px;
+    margin: 6px;
+    background: #0f0f0f;
+    border: 1px solid rgba(199,169,107,0.3);
+    color: #e2dfd7;
+    border-radius: 4px;
+}
+
+.score-form-inline button {
+    margin-top: 12px;
+}

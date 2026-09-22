@@ -46,6 +46,9 @@ export async function loadProfile() {
                 <div class="profile-field">
                     <strong>Username:</strong><br>${profileData.username || "(none set)"}
                 </div>
+                <div class="profile-field">
+                    <strong>Name:</strong><br>${profileData.name || "(none set)"}
+                </div>
                 <a href="/pages/team.html" style="text-decoration:none; color:inherit;">
                     <div class="team-button">
                         <strong>Team:</strong><br>${profileData.team || "(none set)"}
@@ -57,9 +60,9 @@ export async function loadProfile() {
                     Create a 'profiles' table to store user info.
                 </div>
             `}
-            <!--<a href="/pages/update-profile.html" class="logout-btn" style="margin-top: 10px; margin-bottom: 12px; display:block;">
+            <a href="/pages/update-profile.html" class="logout-btn" style="margin-top: 10px; margin-bottom: 12px; display:block;">
                 Update Profile
-            </a> -->
+            </a>
             <button class="logout-btn" id="logoutBtn">Logout</button>
         </div>
     `;

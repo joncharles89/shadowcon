@@ -29,8 +29,8 @@
             <label for="username">Username</label>
             <input id="username" type="text" placeholder="Your username">
 
-            <label for="bio">Bio</label>
-            <input id="bio" type="text" placeholder="Short bio (optional)">
+            <label for="name">Name</label>
+            <input id="name" type="text" placeholder="Your name">
 
             <button class="btn" id="saveProfileBtn">Save Profile</button>
 
@@ -54,7 +54,7 @@
         redirectIfLoggedOut();
 
         const usernameInput = document.getElementById('username');
-        const bioInput = document.getElementById('bio');
+        const nameInput = document.getElementById('name');
         const saveBtn = document.getElementById('saveProfileBtn');
         const message = document.getElementById('profileMessage');
 
