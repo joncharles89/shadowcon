@@ -26,7 +26,7 @@ function getTeamIcon(teamObj) {
 
     const key = teamObj.name.toLowerCase();
     const icon = TEAM_ICONS[key] || null;
-    
+
     return icon;
 }
 
@@ -241,7 +241,7 @@ function renderPairingCard(p, user) {
             </div>
 
             ${
-                bothScoresExist || locked
+                locked
                     ? `
                         <p class="score-status" style="
                             text-align:center;
