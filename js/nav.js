@@ -42,7 +42,7 @@ async function updateNavAuth() {
 
         mobile.innerHTML = `
             <a href="/pages/profile.html">Profile</a> | 
-            ${isAdmin ? `<a href="/pages/admin.html">Admin</a>` : ""}
+            ${isAdmin ? ` | <a href="/pages/admin.html">Admin</a>` : ""}
         `;
     } else {
         desktop.innerHTML = `<a href="/pages/login.html">Login</a>`;
