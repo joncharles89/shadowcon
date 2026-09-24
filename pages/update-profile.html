@@ -75,7 +75,7 @@
             }
 
             usernameInput.value = data.username || "";
-            bioInput.value = data.bio || "";
+            nameInput.value = data.bio || "";
         }
 
         saveBtn.addEventListener('click', async () => {
@@ -83,7 +83,7 @@
             message.style.color = "#c7a96b";
 
             const username = usernameInput.value.trim();
-            const bio = bioInput.value.trim();
+            const name = nameInput.value.trim();
 
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return;
@@ -93,7 +93,7 @@
                 .upsert({
                     id: user.id,
                     username,
-                    bio,
+                    name,
                     updated_at: new Date()
                 });
 
