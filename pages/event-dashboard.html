@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShadowCon - Event Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/event-dashboard.css">
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    <link rel="manifest" href="/icons/site.webmanifest">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#c9a86a">
+    <link rel="shortcut icon" href="/icons/favicon.ico">
+
+    <meta name="msapplication-TileColor" content="#111111">
+    <meta name="msapplication-config" content="/icons/browserconfig.xml">
+    <meta name="theme-color" content="#111111">
+</head>
+
+<body>
+    <!-- Main Content Wrapper -->
+    <main class="content">
+
+        <div class="dashboard-root">
+
+            <!-- Header: Round title only -->
+            <header class="dashboard-header">
+                <h1 id="round-title" class="gold-heading">Round 1</h1>
+            </header>
+
+            <!-- Tables: two columns, up to 16 tables -->
+            <section class="tables-section">
+                <div class="tables-columns">
+                    <div id="tables-left" class="tables-column">
+                        <!-- JS: tables 1–8 -->
+                    </div>
+                    <div id="tables-right" class="tables-column">
+                        <!-- JS: tables 9–16 -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bottom: info boxes left/right, timer in centre -->
+            <section class="bottom-section">
+                <div class="info-box card" id="info-box-bottom-left">
+                    <h2 class="gold-heading">Useful info box A</h2>
+                    <p>Use this for team standings, round notes, etc.</p>
+                </div>
+
+                <div class="timer-block card">
+                    <div class="timer-label">Time Remaining</div>
+                    <div id="timer" class="timer-value">00:00</div>
+                </div>
+
+                <div class="info-box card" id="info-box-bottom-right">
+                    <h2 class="gold-heading">Useful info box B</h2>
+                    <p>Use this for next round info, schedule, etc.</p>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- Dashboard Logic -->
+    <script type="module" src="/js/event-dashboard.js"></script>
+
+</body>
+</html>
