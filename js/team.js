@@ -56,7 +56,7 @@ export async function initTeamPage() {
     teamMessage.style.color = "#c7a96b";
 
     const teamImages = {
-        rebels: "/img/teams/alpha.png",
+        rebels: "/img/factions/Rebels.svg",
         emperor: "/img/factions/TriadWhite.svg",
         kalla: "/img/teams/gamma.png"
     };
