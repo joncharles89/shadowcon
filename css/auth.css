@@ -73,6 +73,7 @@
     transition: all 0.25s ease;
     border-radius: 4px;
     text-decoration: none;   /* remove underline for <a> */
+    font-size: 1rem;   /* add this */
 }
 
 .login-container .btn:hover,
