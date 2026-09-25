@@ -10,7 +10,7 @@ const DEFAULT_EVENT_ID = "369a1d4a-283f-41d6-bfc2-f83cee4b7818";
 const TEAM_ICONS = {
     "rebels": "/img/factions/Rebels.svg",
     "emperor": "/img/factions/TriadWhite.svg",
-    "kalla": "/img/factions/TriadWhite.svg"
+    "kalla": "/img/factions/Kalla.svg"
 };
 
 function getEventId() {

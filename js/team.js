@@ -58,7 +58,7 @@ export async function initTeamPage() {
     const teamImages = {
         rebels: "/img/factions/Rebels.svg",
         emperor: "/img/factions/TriadWhite.svg",
-        kalla: "/img/teams/gamma.png"
+        kalla: "/img/factions/Kalla.svg"
     };
 
     const imgSrc = teamImages[team];

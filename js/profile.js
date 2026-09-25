@@ -44,11 +44,13 @@ export async function loadProfile() {
 
             ${profileData ? `
                 <div class="profile-field">
-                    <strong>Username:</strong><br>${profileData.username || "(none set)"}
-                </div>
-                <div class="profile-field">
                     <strong>Name:</strong><br>${profileData.name || "(none set)"}
                 </div>
+
+                <div class="profile-field">
+                    <strong>Army:</strong><br>${profileData.army_name || "(none set)"}
+                </div>
+
                 <a href="/pages/team.html" style="text-decoration:none; color:inherit;">
                     <div class="team-button">
                         <strong>Team:</strong><br>${profileData.team || "(none set)"}

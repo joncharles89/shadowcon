@@ -13,20 +13,15 @@ export function initRegisterForm() {
         message.style.color = "#c7a96b";
 
         const email = document.getElementById('email').value.trim();
-        const username = document.getElementById('username').value.trim();
+        const name = document.getElementById('name').value.trim();
         const password = document.getElementById('password').value.trim();
 
-        if (!email || !username || !password) {
+        if (!email || !name || !password) {
             message.textContent = "Please fill in all fields.";
             message.style.color = "#c76b6b";
             return;
         }
 
-        if (/\s/.test(username)) {
-            message.textContent = "Username cannot contain spaces.";
-            message.style.color = "#c76b6b";
-            return;
-        }
 
         // Create the Supabase user
         const { data, error } = await supabase.auth.signUp({
@@ -34,7 +29,7 @@ export function initRegisterForm() {
             password,
             options: {
                 data: {
-                    username
+                    name
                 }
             }
         });

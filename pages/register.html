@@ -31,8 +31,8 @@
             <label for="email">Email</label>
             <input id="email" type="email" placeholder="you@example.com">
 
-            <label for="username">Username</label>
-            <input id="username" type="text" placeholder="Your username">
+            <label for="name">Name</label>
+            <input id="name" type="text" placeholder="Your name">
 
             <label for="password">Password</label>
             <input id="password" type="password" placeholder="••••••••">
@@ -56,9 +56,9 @@
         import { initRegisterForm } from '/js/register.js';
         initRegisterForm();
 
-        const usernameInput = document.getElementById('username');
-        usernameInput.addEventListener('input', () => {
-            usernameInput.value = usernameInput.value.replace(/\s+/g, '');
+        const nameInput = document.getElementById('name');
+        nameInput.addEventListener('input', () => {
+            nameInput.value = nameInput.value
         });
     </script>
 </body>
