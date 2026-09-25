@@ -19,7 +19,7 @@ export async function renderPairingsTable(eventId, roundNumber) {
     const container = document.getElementById("pairings-table");
 
     const { data: pairings, error } = await supabase
-        .from("event_pairings_with_players")
+        .from("v_event_pairings_with_players")
         .select("*")
         .eq("event_id", eventId)
         .eq("round_number", roundNumber)
@@ -229,7 +229,7 @@ export async function showCreatePairingModal(eventId, roundNumber) {
    ============================================================ */
 export async function showEditPairingModal(pairingId, eventId, roundNumber) {
     const { data: pairing } = await supabase
-        .from("event_pairings_with_players")
+        .from("v_event_pairings_with_players")
         .select("*")
         .eq("id", pairingId)
         .single();
