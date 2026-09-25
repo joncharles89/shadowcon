@@ -392,7 +392,7 @@ function showAutoPairPreviewModal(eventId, roundNumber, previewPairings, conflic
     const unpairedHtml = unpaired.length === 0
         ? `<p class="no-unpaired">All players have been paired.</p>`
         : `
-            <h3 class="unpaired-title">Unpaired This Round</h3>
+            <h3 class="unpaired-title" style="margin-top:20px">Unpaired This Round</h3>
             <ul class="unpaired-list">
                 ${unpaired.map(p => `
                     <li>

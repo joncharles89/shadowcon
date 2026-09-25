@@ -55,7 +55,7 @@ async function loadPairingsTab() {
                 </select>
             </div>
 
-            <div class="round-buttons">
+            <div class="round-buttons" style="margin-top:12px">
                 ${[1,2,3,4,5].map(r => `
                     <button class="round-btn ${r === currentRoundNumber ? "active" : ""}" data-round="${r}">
                         Round ${r}
@@ -63,7 +63,7 @@ async function loadPairingsTab() {
                 `).join("")}
             </div>
 
-            <div class="pairings-actions">
+            <div class="pairings-actions" style="margin-top:12px">
                 <button id="createPairingBtn" class="admin-btn">Create Pairing</button>
                 <button id="autoPairBtn" class="admin-btn">Auto Pair</button>
             </div>
