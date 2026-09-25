@@ -136,3 +136,129 @@
     border-color: #c7a96b;
     color: #c7a96b;
 }
+
+.pairings-header {
+    margin-bottom: 20px;
+}
+
+.pairings-row {
+    margin-bottom: 12px;
+}
+
+.pairings-label {
+    font-family: "Cinzel", serif;
+    color: #c7a96b;
+    margin-right: 10px;
+}
+
+.admin-select {
+    padding: 8px 12px;
+    background: #0f0f0f;
+    border: 1px solid rgba(199,169,107,0.3);
+    color: #e2dfd7;
+    border-radius: 4px;
+}
+
+.round-buttons {
+    margin-bottom: 15px;
+}
+
+.round-btn {
+    padding: 10px 22px;
+    border: 2px solid #c7a96b;
+    background: #0f0f0f;
+    color: #e2dfd7;
+    font-family: "Cinzel", serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
+.round-btn:hover {
+    background: #1a1a1a;
+    border-color: #a88952;
+    color: #c7a96b;
+}
+
+.round-btn.active {
+    background: #1a1a1a;
+    border-color: #c7a96b;
+    color: #c7a96b;
+}
+
+.pairings-actions {
+    margin-bottom: 20px;
+}
+
+#admin-modal label {
+    margin-top: 10px;
+    margin-bottom: 4px;
+    display: block;
+    font-family: "Cinzel", serif;
+    color: #c7a96b;
+}
+
+#admin-modal input,
+#admin-modal select {
+    width: 100%;
+    padding: 8px 10px;
+    background: #0f0f0f;
+    border: 1px solid rgba(199,169,107,0.3);
+    color: #e2dfd7;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.team-icon-small {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 6px;
+    filter: drop-shadow(0 0 3px rgba(199,169,107,0.4));
+}
+
+.unpaired-title {
+    margin-top: 25px;
+    font-family: "Cinzel", serif;
+    color: #c7a96b;
+}
+
+.unpaired-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.unpaired-list li {
+    padding: 6px 0;
+    font-family: "Cinzel", serif;
+    color: #e2dfd7;
+    display: flex;
+    align-items: center;
+}
+
+.no-unpaired {
+    margin-top: 25px;
+    font-family: "Cinzel", serif;
+    color: #777;
+}
+
+.conflict-warnings {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: #ff6b6b;
+    font-size: 0.9rem;
+}
+
+.conflict-warnings li {
+    margin: 2px 0;
+}
+
+.no-conflicts {
+    color: #7fc97f;
+    font-size: 0.9rem;
+}

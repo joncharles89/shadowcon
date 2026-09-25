@@ -1,96 +1,84 @@
 import { supabase } from '/js/supabaseClient.js';
 import { openModal, closeModal } from '/js/admin-modal.js';
 
-//------------------------------------------------------------
-// LOAD PLAYERS TABLE
-//------------------------------------------------------------
-export async function loadPlayersAdmin() {
-    const root = document.getElementById("admin-content");
+export async function renderPlayersAdmin() {
+    const root = document.getElementById("players-admin");
+    if (!root) return;
 
     const { data: players } = await supabase
         .from("profiles")
-        .select("id, name, army_name, team_id");
+        .select("id, name, army_name, team_id, enabled")
+        .order("name");
 
     const { data: teams } = await supabase
         .from("teams")
         .select("id, name")
         .order("name");
 
-    root.innerHTML = `
-        <div class="admin-section">
-            <h2>Players</h2>
+    const teamMap = new Map(teams.map(t => [t.id, t.name]));
 
-            <table class="admin-table">
+    root.innerHTML = `
+        <table class="admin-table">
+            <thead>
                 <tr>
                     <th>Name</th>
                     <th>Army</th>
                     <th>Team</th>
+                    <th>Enabled</th>
                     <th>Actions</th>
                 </tr>
-
+            </thead>
+            <tbody>
                 ${players.map(p => `
                     <tr>
                         <td>${p.name}</td>
-                        <td>${p.army_name}</td>
-                        <td>${teamName(p.team_id, teams)}</td>
+                        <td>${p.army_name || "-"}</td>
+                        <td>${teamMap.get(p.team_id) || "-"}</td>
+                        <td>${p.enabled ? "Yes" : "No"}</td>
                         <td>
                             <button class="admin-btn" data-edit="${p.id}">Edit</button>
                         </td>
                     </tr>
                 `).join("")}
-            </table>
-        </div>
+            </tbody>
+        </table>
     `;
 
-    document.querySelectorAll("[data-edit]").forEach(btn => {
-        btn.addEventListener("click", () => editPlayerModal(btn.dataset.edit));
+    // Attach edit handlers
+    root.querySelectorAll("[data-edit]").forEach(btn => {
+        btn.addEventListener("click", () => openPlayerEditModal(btn.dataset.edit, players, teams));
     });
 }
 
-// Helper to show team name
-function teamName(teamId, teams) {
-    const t = teams.find(x => x.id === teamId);
-    return t ? t.name : "-";
-}
-
-//------------------------------------------------------------
-// EDIT PLAYER MODAL
-//------------------------------------------------------------
-async function editPlayerModal(playerId) {
-    // Load player
-    const { data: player } = await supabase
-        .from("profiles")
-        .select("id, name, army_name, team_id")
-        .eq("id", playerId)
-        .single();
-
-    // Load teams
-    const { data: teams } = await supabase
-        .from("teams")
-        .select("id, name")
-        .order("name");
+/* ============================================================
+   Player Edit Modal
+   ============================================================ */
+function openPlayerEditModal(playerId, players, teams) {
+    const player = players.find(p => p.id === playerId);
 
     const teamOptions = teams
-        .map(t => `
-            <option value="${t.id}" ${t.id === player.team_id ? "selected" : ""}>
-                ${t.name}
-            </option>
-        `)
+        .map(t => `<option value="${t.id}" ${t.id === player.team_id ? "selected" : ""}>${t.name}</option>`)
         .join("");
 
     openModal(`
         <h3>Edit Player</h3>
 
         <label>Name</label>
-        <input id="edit-player-name" type="text" value="${player.name}">
+        <input id="edit-name" type="text" value="${player.name}">
 
         <label>Army</label>
-        <input id="edit-player-army" type="text" value="${player.army_name}">
+        <input id="edit-army" type="text" value="${player.army_name || ""}">
 
         <label>Team</label>
-        <select id="edit-player-team">
+        <select id="edit-team">
             <option value="">No Team</option>
             ${teamOptions}
+        </select>
+
+        <label>Enabled</label>
+        <select id="edit-enabled">
+            <option value="true" ${player.enabled ? "selected" : ""}>Enabled</option>
+            <option value="false" ${!player.enabled ? "selected" : ""}>Disabled</option>
         </select>
 
         <div class="admin-modal-buttons">
@@ -102,20 +90,20 @@ async function editPlayerModal(playerId) {
     document.getElementById("cancelModal").onclick = closeModal;
 
     document.getElementById("savePlayer").onclick = async () => {
-        const newName = document.getElementById("edit-player-name").value.trim();
-        const newArmy = document.getElementById("edit-player-army").value.trim();
-        const newTeam = document.getElementById("edit-player-team").value || null;
+        const name = document.getElementById("edit-name").value.trim();
+        const army = document.getElementById("edit-army").value.trim();
+        const teamId = document.getElementById("edit-team").value || null;
+        const enabled = document.getElementById("edit-enabled").value === "true";
 
-        await supabase
-            .from("profiles")
-            .update({
-                name: newName,
-                army_name: newArmy,
-                team_id: newTeam
-            })
-            .eq("id", playerId);
+        await supabase.from("profiles").update({
+            name,
+            army_name: army,
+            team_id: teamId,
+            enabled,
+            updated_at: new Date()
+        }).eq("id", playerId);
 
         closeModal();
-        loadPlayersAdmin();
+        renderPlayersAdmin();
     };
 }

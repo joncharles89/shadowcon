@@ -1,5 +1,14 @@
 import { supabase } from '/js/supabaseClient.js';
 
+// Unlock time for rounds
+const ROUNDS_UNLOCK_TIME = new Date("2026-10-22T17:00:00");
+
+// Check if rounds should be visible
+function roundsAreUnlocked() {
+    const now = new Date();
+    return now >= ROUNDS_UNLOCK_TIME;
+}
+
 async function loadNav() {
     const placeholder = document.getElementById('nav-placeholder');
     if (!placeholder) return;
@@ -16,10 +25,13 @@ async function loadNav() {
 async function updateNavAuth() {
     const { data: { user } } = await supabase.auth.getUser();
 
-    const desktop = document.getElementById('nav-auth-desktop');
-    const mobile = document.getElementById('nav-auth-mobile');
+    const desktopAuth = document.getElementById('nav-auth-desktop');
+    const mobileAuth = document.getElementById('nav-auth-mobile');
 
-    if (!desktop || !mobile) return;
+    const desktopLinks = document.querySelector('.nav-links');
+    const mobileLinks = document.getElementById('mobileMenu');
+
+    if (!desktopAuth || !mobileAuth || !desktopLinks || !mobileLinks) return;
 
     let isAdmin = false;
 
@@ -34,22 +46,41 @@ async function updateNavAuth() {
         isAdmin = !!adminRow;
     }
 
+    // Determine if rounds should be visible
+    const showRounds = isAdmin || roundsAreUnlocked();
+
+    // Remove existing rounds links from nav.html
+    desktopLinks.querySelectorAll('a[href="/pages/rounds.html"]').forEach(el => el.parentElement.remove());
+    mobileLinks.querySelectorAll('a[href="/pages/rounds.html"]').forEach(el => el.parentElement.remove());
+
+    // Re-insert rounds link only if allowed
+    if (showRounds) {
+        const desktopRounds = document.createElement('li');
+        desktopRounds.innerHTML = `<a href="/pages/rounds.html">Rounds</a>`;
+        desktopLinks.insertBefore(desktopRounds, desktopAuth);
+
+        const mobileRounds = document.createElement('li');
+        mobileRounds.innerHTML = `<a href="/pages/rounds.html">Rounds</a>`;
+        mobileLinks.insertBefore(mobileRounds, mobileAuth);
+    }
+
+    // Auth section
     if (user) {
-        desktop.innerHTML = `
+        desktopAuth.innerHTML = `
             <a href="/pages/profile.html">Profile</a>
             ${isAdmin ? ` | <a href="/pages/admin.html">Admin</a>` : ""}
         `;
 
-        mobile.innerHTML = `
+        mobileAuth.innerHTML = `
             <a href="/pages/profile.html">Profile</a>
             ${isAdmin ? ` | <a href="/pages/admin.html">Admin</a>` : ""}
         `;
     } else {
-        desktop.innerHTML = `<a href="/pages/login.html">Login</a>`;
-        mobile.innerHTML = `<a href="/pages/login.html">Login</a>`;
+        desktopAuth.innerHTML = `<a href="/pages/login.html">Login</a>`;
+        mobileAuth.innerHTML = `<a href="/pages/login.html">Login</a>`;
     }
 
-    // Logout handlers (unchanged)
+    // Logout handlers
     const logoutDesktop = document.getElementById('logoutLink');
     const logoutMobile = document.getElementById('logoutLinkMobile');
 
@@ -67,7 +98,6 @@ async function updateNavAuth() {
         });
     }
 }
-
 
 function activateMobileMenu() {
     const burger = document.getElementById('burger');
