@@ -103,18 +103,25 @@ async function renderTables(eventId, roundNumber) {
         const div = document.createElement("div");
         div.className = "table-entry";
 
+        if (p.locked) {
+            div.classList.add("complete");
+        }
+
         const icon1 = getTeamIcon(p.player1_team);
         const icon2 = getTeamIcon(p.player2_team);
+
+        const swing1 = p.p1_scoreswing > 0 ? ` <span class="score-swing">+${p.p1_scoreswing.toFixed(0)}</span>` : "";
+        const swing2 = p.p2_scoreswing > 0 ? ` <span class="score-swing">+${p.p2_scoreswing.toFixed(0)}</span>` : "";
 
         div.innerHTML = `
             <div class="table-entry-title">${p.table_number} - ${p.table_name}</div>
 
             <div class="table-entry-players">
                 ${icon1 ? `<img class="team-icon-small" src="${icon1}" alt="${p.player1_team}">` : ""}
-                ${p.player1_name}
+                ${p.player1_name}${swing1}
                 <span class="vs-text">vs</span>
                 ${p.player2_name}
-                ${icon2 ? `<img class="team-icon-small" src="${icon2}" alt="${p.player2_team}">` : ""}
+                ${icon2 ? `<img class="team-icon-small" src="${icon2}" alt="${p.player2_team}">` : ""}${swing2}
             </div>
         `;
 
@@ -161,6 +168,111 @@ async function renderRoundPicker(eventId, activeRound) {
     document.body.appendChild(picker);
 }
 
+async function renderSwingScoreboard(eventId, roundNumber) {
+    const scoreboard = document.getElementById("swing-scoreboard");
+    scoreboard.innerHTML = "";
+
+    const { data, error } = await supabase
+        .from("v_regionswing")
+        .select("*")
+        .eq("event_id", eventId)
+        .lte("round_number", roundNumber)
+        .order("region", { ascending: true });
+
+    if (error) {
+        console.error("Error fetching region swing:", error);
+        return;
+    }
+
+    // Combine rounds into cumulative totals
+    const regionTotals = {};
+    let totalRebels = 0;
+    let totalEmperors = 0;
+
+    data.forEach(row => {
+        if (!regionTotals[row.region]) {
+            regionTotals[row.region] = { rebels: 0, emperors: 0 };
+        }
+
+        regionTotals[row.region].rebels += row.totalrebelscore || 0;
+        regionTotals[row.region].emperors += row.totalemperorscore || 0;
+
+        totalRebels += row.totalrebelscore || 0;
+        totalEmperors += row.totalemperorscore || 0;
+    });
+
+    // Convert totals into cumulative swing
+    const regions = Object.keys(regionTotals).map(region => {
+        const rebels = regionTotals[region].rebels;
+        const emperors = regionTotals[region].emperors;
+
+        const swing = rebels - emperors; // corrected logic
+
+        return { region, swing };
+    });
+
+    // Render each region
+    regions.forEach(region => {
+        const swing = region.swing || 0;
+        const cappedSwing = Math.max(-10, Math.min(10, swing));
+        const percent = ((cappedSwing + 10) / 20) * 100;
+
+        const regionDiv = document.createElement("div");
+        regionDiv.className = "swing-region";
+
+        regionDiv.innerHTML = `
+            <div class="swing-region-name">${region.region}</div>
+
+            <div class="swing-bar-wrapper">
+                <div class="swing-label">
+                    Emperor
+                    <img src="/img/factions/TriadWhite.svg" class="swing-faction-icon">
+                </div>
+
+                <div class="swing-bar">
+                    <div class="swing-marker" style="left: ${percent}%"></div>
+                </div>
+
+                <div class="swing-label">
+                    Rebels
+                    <img src="/img/factions/Rebels.svg" class="swing-faction-icon">
+                </div>
+            </div>
+        `;
+
+        scoreboard.appendChild(regionDiv);
+    });
+
+    // TOTAL SWING SUMMARY
+    const totalSwing = totalRebels - totalEmperors;
+    const cappedTotal = Math.max(-10, Math.min(10, totalSwing));
+    const totalPercent = ((cappedTotal + 10) / 20) * 100;
+
+    const totalDiv = document.createElement("div");
+    totalDiv.className = "swing-total";
+
+    totalDiv.innerHTML = `
+        <div class="swing-total-label">Total Swing</div>
+
+        <div class="swing-total-bar-wrapper">
+            <div class="swing-label">
+                Emperor
+                <img src="/img/factions/TriadWhite.svg" class="swing-faction-icon">
+            </div>
+
+            <div class="swing-total-bar">
+                <div class="swing-total-marker" style="left: ${totalPercent}%"></div>
+            </div>
+
+            <div class="swing-label">
+                Rebels
+                <img src="/img/factions/Rebels.svg" class="swing-faction-icon">
+            </div>
+        </div>
+    `;
+
+    scoreboard.appendChild(totalDiv);
+}
 
 /* ---------------------------------------------
    Init
@@ -181,6 +293,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Render tables
     await renderTables(eventId, roundNumber);
 
+    // Render regional swing
+    await renderSwingScoreboard(eventId, roundNumber);
+
     // Start countdown
     startCountdown(roundEndISO);
 });
+
