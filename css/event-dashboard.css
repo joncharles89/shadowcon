@@ -1,17 +1,77 @@
+:root {
+    --region1: rgba(199, 169, 107, 0.15);
+    --region2: rgba(107, 199, 169, 0.15);
+    --region3: rgba(169, 107, 199, 0.15);
+    --region4: rgba(199, 107, 107, 0.15);
+    --region5: rgba(107, 107, 199, 0.15);
+
+    /* Bold versions for completed pairings */
+    --region1-bold: rgba(199, 169, 107, 0.35);
+    --region2-bold: rgba(107, 199, 169, 0.35);
+    --region3-bold: rgba(169, 107, 199, 0.35);
+    --region4-bold: rgba(199, 107, 107, 0.35);
+    --region5-bold: rgba(107, 107, 199, 0.35);
+}
+
+.table-entry.region-1 { background: var(--region1); }
+.table-entry.region-2 { background: var(--region2); }
+.table-entry.region-3 { background: var(--region3); }
+.table-entry.region-4 { background: var(--region4); }
+.table-entry.region-5 { background: var(--region5); }
+
+.table-entry.complete.region-1 { background: var(--region1-bold); }
+.table-entry.complete.region-2 { background: var(--region2-bold); }
+.table-entry.complete.region-3 { background: var(--region3-bold); }
+.table-entry.complete.region-4 { background: var(--region4-bold); }
+.table-entry.complete.region-5 { background: var(--region5-bold); }
+
+.swing-region.region-1 { background: var(--region1); }
+.swing-region.region-2 { background: var(--region2); }
+.swing-region.region-3 { background: var(--region3); }
+.swing-region.region-4 { background: var(--region4); }
+.swing-region.region-5 { background: var(--region5); }
+
 /* Root */
 .dashboard-root {
-    width: calc(100% - 90px); /* subtract sidebar width */
-    margin-left: 90px;        /* shift right to clear sidebar */
+    margin-left: 70px; /* match sidebar width */
+    width: calc(100% - 70px); /* fill remaining space */
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 5px;
+}
+
+.dashboard-root,
+.dashboard-content {
+    font-family: "Inter", system-ui, sans-serif;
+}
+
+body {
+    padding-top: 1px;
+}
+
+.dashboard-content {
+    margin: 15px;
+    position: relative;
+    flex: 1;
+}
+
+.dashboard-content h1 {
+    text-align: center;
+    margin: 0 auto 0px auto;
+}
+
+.dashboard-content::before {
+    content: "";
+    display: block;
+    height: 0px; /* same as scroll-margin-top */
+    margin-top: 0px;
 }
 
 /* Header */
 .dashboard-header {
     text-align: center;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 0px;
+    padding-bottom: 2px;
     width: 100%;
 }
 
@@ -21,6 +81,8 @@
     text-transform: uppercase;
     letter-spacing: 0.12em;
     font-size: 2rem;
+    margin-top: 0px;
+    padding-top: 0px;
 }
 
 /* Tables: two vertical columns */
@@ -30,21 +92,30 @@
 
 .tables-columns {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* ALWAYS two columns */
-    gap: 40px;
-    width: 100%;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    grid-auto-flow: column;
+    grid-auto-rows: auto;
+    grid-template-rows: repeat(8, auto); /* ← THIS fixes it */
 }
 
 .tables-column {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 6px;
     overflow-y: auto;
     padding-right: 10px;
 }
 
 /* Individual table entry */
 .table-entry {
+    display: grid;
+    grid-template-columns: 1fr 30px 22px 1fr 22px 1fr 22px 30px; 
+    /* table-name swing1 icon player1 vs player2 icon swing2 */
+    place-items: center;
+    align-items: center;
+    gap: 8px;
+    padding: 4px;
     color: #e2dfd7;
     font-family: "Inter", system-ui, sans-serif;
     text-align: center;
@@ -53,10 +124,11 @@
 .table-entry-title {
     font-weight: 600;
     color: #c7a96b;
+    font-size: 0.9rem;
 }
 
 .table-entry-players {
-    margin-left: 8px;
+    font-size: 0.95rem;
 }
 
 /* Bottom section: info – timer – info */
@@ -190,113 +262,80 @@
 .table-entry.complete {
     background: rgba(199,169,107,0.15); /* soft gold tint */
     border: 1px solid rgba(199,169,107,0.4);
-    padding: 12px;
+    padding: 4px; /* slightly more padding for the highlight */
     border-radius: 6px;
     box-shadow: 0 0 10px rgba(199,169,107,0.3);
 }
 
-/* Swing Scoreboard Container — styled like info-box */
-/* Swing Scoreboard Container — condensed */
+/* Swing Scoreboard Container — condensed & unified */
 .swing-scoreboard {
+    width: 100%;
     background: #0f0f0f;
     border: 1px solid rgba(199,169,107,0.4);
-    padding: 14px 16px; /* tighter */
+    padding: 14px 16px;
     border-radius: 6px;
     box-shadow: 0 0 14px rgba(0,0,0,0.6);
 
     display: flex;
     flex-direction: column;
-    gap: 18px; /* reduced from 30px */
+    gap: 18px;
     text-align: center;
 }
 
-/* Each Region Block — condensed */
-.swing-region {
-    text-align: center;
-    margin-bottom: 4px; /* small spacing */
+/* Region + Total blocks share identical styling */
+.swing-region-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
 }
 
-/* Region Name — slightly smaller */
-.swing-region-name {
+.swing-region,
+.swing-total {
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+/* Region + Total names */
+.swing-region-name,
+.swing-total-label {
     font-family: "Cinzel", serif;
     color: #c7a96b;
-    font-size: 1.1rem; /* was 1.3rem */
-    margin-bottom: 6px; /* tighter */
+    font-size: 1.1rem;
+    margin-bottom: 6px;
 }
 
-/* Swing Bar Wrapper — tighter alignment */
-.swing-bar-wrapper {
+/* Wrapper for bar + labels */
+.swing-bar-wrapper,
+.swing-total-bar-wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: relative;
-    margin: 0 4px; /* slight inward pull */
+    margin: 0 4px;
 }
 
-/* Labels — slightly smaller */
+/* Emperor / Rebels labels */
 .swing-label {
     font-family: "Cinzel", serif;
     color: #e2dfd7;
-    font-size: 0.85rem; /* reduced */
-    width: 54px; /* slightly narrower */
+    font-size: 0.85rem;
+    width: 54px;
 }
 
-/* Bar — slightly thinner */
-.swing-bar {
-    flex: 1;
-    height: 6px; /* was 8px */
-    background: #222;
-    border: 1px solid rgba(199,169,107,0.4);
-    border-radius: 4px;
-    margin: 0 8px; /* tighter */
-    position: relative;
-}
-
-/* Marker — slightly smaller */
-.swing-marker {
-    position: absolute;
-    top: -5px; /* adjusted for thinner bar */
-    width: 10px;
-    height: 18px;
-    background: #c7a96b;
-    border-radius: 3px;
-    box-shadow: 0 0 6px rgba(199,169,107,0.6);
-}
-
-/* Faction icons — slightly smaller */
+/* Faction icons */
 .swing-faction-icon {
-    width: 22px; /* was 28px */
+    width: 22px;
     height: 22px;
     vertical-align: middle;
     margin: 0 4px;
     filter: drop-shadow(0 0 4px rgba(199,169,107,0.5));
 }
 
-/* Total Swing — condensed */
-.swing-total {
-    margin-top: 10px; /* reduced */
-    padding-top: 10px; /* reduced */
-    border-top: 1px solid rgba(199,169,107,0.3);
-    text-align: center;
-}
-
-.swing-total-label {
-    font-family: "Cinzel", serif;
-    color: #c7a96b;
-    font-size: 1.1rem; /* slightly smaller */
-    margin-bottom: 6px;
-}
-
-.swing-total-bar-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-}
-
+/* Bars (region + total identical) */
+.swing-bar,
 .swing-total-bar {
     flex: 1;
-    height: 8px; /* slightly thinner */
+    height: 6px;
     background: #222;
     border: 1px solid rgba(199,169,107,0.4);
     border-radius: 4px;
@@ -304,12 +343,54 @@
     position: relative;
 }
 
+/* Marker (region + total identical) */
+.swing-marker,
 .swing-total-marker {
     position: absolute;
-    top: -6px;
-    width: 12px;
-    height: 20px;
+    top: -5px;
+    width: 10px;
+    height: 18px;
     background: #c7a96b;
     border-radius: 3px;
     box-shadow: 0 0 6px rgba(199,169,107,0.6);
+}
+
+/* Centre line — NEW */
+.swing-centre-line {
+    position: absolute;
+    left: 50%;
+    top: -4px;
+    bottom: -4px;
+    width: 2px;
+    background: rgba(199,169,107,0.4);
+    border-radius: 1px;
+    pointer-events: none;
+}
+
+.table-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.table-name {
+    justify-content: flex-start;
+    color: #c7a96b;
+    font-weight: 600;
+}
+
+.swing {
+    color: #c7a96b;
+    font-weight: 700;
+    font-size: 1rem;
+    min-width: 30px;
+    width: 30px;
+}
+
+.table-col.swing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px; /* fixed width */
+    min-width: 30px;
 }

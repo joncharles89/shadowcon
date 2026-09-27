@@ -108,6 +108,8 @@ button:hover,
     align-items: center;
     justify-content: center;
     z-index: 2000;
+    overflow-y: auto;   /* allows modal to scroll if taller than viewport */
+    padding: 20px;      /* prevents modal touching screen edges */
 }
 
 .admin-modal {
@@ -118,6 +120,8 @@ button:hover,
     max-width: 90%;
     border-radius: 6px;
     box-shadow: 0 0 20px rgba(199,169,107,0.3);
+    max-height: 80vh;      /* prevents modal from exceeding screen height */
+    overflow-y: auto;      /* enables scrolling inside the modal */
 }
 
 .admin-modal h3 {

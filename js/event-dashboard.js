@@ -22,6 +22,51 @@ function getRoundFromURL() {
     return isNaN(round) ? 1 : round;
 }
 
+function teamPriority(team) {
+    if (team === "Emperor") return 1;
+    if (team === "Kalla") return 2;
+    if (team === "Rebels") return 3;
+    return 99; // fallback
+}
+
+function normalizeTeams(p) {
+    const players = [
+        {
+            id: p.player1_id,
+            name: p.player1_name,
+            team: p.player1_team,
+            swing: p.p1_scoreswing
+        },
+        {
+            id: p.player2_id,
+            name: p.player2_name,
+            team: p.player2_team,
+            swing: p.p2_scoreswing
+        }
+    ];
+
+    // Sort by priority
+    players.sort((a, b) => teamPriority(a.team) - teamPriority(b.team));
+
+    // Write back
+    p.player1_id = players[0].id;
+    p.player1_name = players[0].name;
+    p.player1_team = players[0].team;
+    p.p1_scoreswing = players[0].swing;
+
+    p.player2_id = players[1].id;
+    p.player2_name = players[1].name;
+    p.player2_team = players[1].team;
+    p.p2_scoreswing = players[1].swing;
+}
+
+function regionToClass(regionName) {
+    return regionName
+        .toLowerCase()
+        .replace(/\s+/g, "-")      // spaces → hyphens
+        .replace(/[^a-z0-9-]/g, ""); // remove weird characters
+}
+
 /* ---------------------------------------------
    Fetch round end time from Supabase
 --------------------------------------------- */
@@ -100,35 +145,43 @@ async function renderTables(eventId, roundNumber) {
     const pairings = await fetchPairings(eventId, roundNumber);
 
     pairings.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "table-entry";
+        normalizeTeams(p);
+
+        const entry = document.createElement("div");
+        entry.className = "table-entry";
+        
+        const regionClass = regionToClass(p.region);
+        entry.classList.add(regionClass);
 
         if (p.locked) {
-            div.classList.add("complete");
+            entry.classList.add("complete");
         }
-
-        const icon1 = getTeamIcon(p.player1_team);
-        const icon2 = getTeamIcon(p.player2_team);
 
         const swing1 = p.p1_scoreswing > 0 ? ` <span class="score-swing">+${p.p1_scoreswing.toFixed(0)}</span>` : "";
         const swing2 = p.p2_scoreswing > 0 ? ` <span class="score-swing">+${p.p2_scoreswing.toFixed(0)}</span>` : "";
 
-        div.innerHTML = `
-            <div class="table-entry-title">${p.table_number} - ${p.table_name}</div>
-
-            <div class="table-entry-players">
-                ${icon1 ? `<img class="team-icon-small" src="${icon1}" alt="${p.player1_team}">` : ""}
-                ${p.player1_name}${swing1}
-                <span class="vs-text">vs</span>
+        entry.innerHTML = `
+            <span class="table-entry-title">${p.table_number} - ${p.table_name}</span>
+            <span class="table-col swing">
+                ${swing1 ? swing1 : ""}
+            </span>
+            <img class="team-icon-small" src="${getTeamIcon(p.player1_team)}">
+            <span class="table-col player2">
+                ${p.player1_name}
+            </span>
+            <span class="vs-text">vs</span>
+            <span class="table-col player2">
                 ${p.player2_name}
-                ${icon2 ? `<img class="team-icon-small" src="${icon2}" alt="${p.player2_team}">` : ""}${swing2}
-            </div>
+            </span>
+            <img class="team-icon-small" src="${getTeamIcon(p.player2_team)}">
+            <span class="table-col swing">
+                ${swing2 ? swing2 : ""}
+            </span>
         `;
 
-        container.appendChild(div);
+        container.appendChild(entry);
     });
 }
-
 
 /* ---------------------------------------------
    Round Picker (left side)
@@ -171,6 +224,10 @@ async function renderRoundPicker(eventId, activeRound) {
 async function renderSwingScoreboard(eventId, roundNumber) {
     const scoreboard = document.getElementById("swing-scoreboard");
     scoreboard.innerHTML = "";
+
+    const regionGrid = document.createElement("div");
+    regionGrid.className = "swing-region-grid";
+    scoreboard.appendChild(regionGrid);
 
     const { data, error } = await supabase
         .from("v_regionswing")
@@ -219,6 +276,7 @@ async function renderSwingScoreboard(eventId, roundNumber) {
 
         const regionDiv = document.createElement("div");
         regionDiv.className = "swing-region";
+        regionDiv.classList.add(regionToClass(region.region));
 
         regionDiv.innerHTML = `
             <div class="swing-region-name">${region.region}</div>
@@ -230,6 +288,7 @@ async function renderSwingScoreboard(eventId, roundNumber) {
                 </div>
 
                 <div class="swing-bar">
+                    <div class="swing-centre-line"></div>
                     <div class="swing-marker" style="left: ${percent}%"></div>
                 </div>
 
@@ -240,7 +299,7 @@ async function renderSwingScoreboard(eventId, roundNumber) {
             </div>
         `;
 
-        scoreboard.appendChild(regionDiv);
+        regionGrid.appendChild(regionDiv);
     });
 
     // TOTAL SWING SUMMARY
@@ -261,6 +320,7 @@ async function renderSwingScoreboard(eventId, roundNumber) {
             </div>
 
             <div class="swing-total-bar">
+                <div class="swing-centre-line"></div>
                 <div class="swing-total-marker" style="left: ${totalPercent}%"></div>
             </div>
 
@@ -271,7 +331,7 @@ async function renderSwingScoreboard(eventId, roundNumber) {
         </div>
     `;
 
-    scoreboard.appendChild(totalDiv);
+    regionGrid.appendChild(totalDiv);
 }
 
 /* ---------------------------------------------

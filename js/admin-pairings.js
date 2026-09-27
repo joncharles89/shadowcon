@@ -12,6 +12,13 @@ function getTeamIcon(teamName) {
     return TEAM_ICONS[teamName] || "/img/SwordIcon.svg";
 }
 
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
 /* ============================================================
    Render Pairings Table
    ============================================================ */
@@ -45,7 +52,7 @@ export async function renderPairingsTable(eventId, roundNumber) {
             <tbody>
                 ${pairings.map(p => `
                     <tr>
-                        <td>${p.table_name} ${p.table_number}</td>
+                        <td>${p.table_number} - ${p.table_name}</td>
 
                         <td>
                             <img class="team-icon-small" src="${getTeamIcon(p.player1_team)}">
@@ -124,7 +131,7 @@ export async function renderPairingsTable(eventId, roundNumber) {
         `;
 
     container.insertAdjacentHTML("beforeend", unpairedHtml);
-
+    
 }
 
 /* ============================================================
@@ -218,6 +225,12 @@ export async function showCreatePairingModal(eventId, roundNumber) {
             player1_id: player1.id,
             player2_id: player2.id
         });
+
+        document.getElementById("randomiseAutoPair").onclick = () => {
+            window.autoPairRandomise = true;
+            closeModal();
+            autoPair(eventId, roundNumber);
+        };
 
         closeModal();
         renderPairingsTable(eventId, roundNumber);
@@ -357,7 +370,14 @@ export async function showEditPairingModal(pairingId, eventId, roundNumber) {
 /* ============================================================
    Auto Pairing
    ============================================================ */
-function showAutoPairPreviewModal(eventId, roundNumber, previewPairings, conflictList, allPlayers) {
+function showAutoPairPreviewModal(
+    eventId,
+    roundNumber,
+    previewPairings,
+    conflictList,
+    allPlayers,
+    allPairings
+) {
     const rows = previewPairings.map((p, i) => {
         const conflicts = conflictList[i];
         const conflictHtml = conflicts.length
@@ -380,13 +400,26 @@ function showAutoPairPreviewModal(eventId, roundNumber, previewPairings, conflic
         `;
     }).join("");
 
-    // Determine unpaired players
+    /* ============================================================
+       Determine unpaired players (DB pairings + preview pairings)
+       ============================================================ */
     const pairedIds = new Set();
+
+    // Already paired in the database for this round
+    allPairings.forEach(p => {
+        if (p.round_number === roundNumber) {
+            if (p.player1_id) pairedIds.add(p.player1_id);
+            if (p.player2_id) pairedIds.add(p.player2_id);
+        }
+    });
+
+    // Paired in the preview
     previewPairings.forEach(p => {
         pairedIds.add(p.player1_id);
         pairedIds.add(p.player2_id);
     });
 
+    // Compute unpaired players
     const unpaired = allPlayers.filter(p => !pairedIds.has(p.id));
 
     const unpairedHtml = unpaired.length === 0
@@ -403,6 +436,9 @@ function showAutoPairPreviewModal(eventId, roundNumber, previewPairings, conflic
             </ul>
         `;
 
+    /* ============================================================
+       Modal HTML
+       ============================================================ */
     openModal(`
         <h3>Auto‑Pair Preview</h3>
 
@@ -422,11 +458,21 @@ function showAutoPairPreviewModal(eventId, roundNumber, previewPairings, conflic
 
         <div class="admin-modal-buttons">
             <button class="admin-modal-btn" id="cancelAutoPair">Cancel</button>
+            <button class="admin-modal-btn" id="randomiseAutoPair">Randomise</button>
             <button class="admin-modal-btn" id="confirmAutoPair">Confirm</button>
         </div>
     `);
 
+    /* ============================================================
+       Button Handlers
+       ============================================================ */
     document.getElementById("cancelAutoPair").onclick = closeModal;
+
+    document.getElementById("randomiseAutoPair").onclick = () => {
+        window.autoPairRandomise = true;
+        closeModal();
+        autoPair(eventId, roundNumber);
+    };
 
     document.getElementById("confirmAutoPair").onclick = async () => {
         const cleanPairings = previewPairings.map(p => ({
@@ -444,35 +490,67 @@ function showAutoPairPreviewModal(eventId, roundNumber, previewPairings, conflic
     };
 }
 
-
 export async function autoPair(eventId, roundNumber) {
+    // Fetch all enabled players
     const { data: players } = await supabase
         .from("profiles")
         .select("id, name, team_id, teams(name)")
         .eq("enabled", true)
         .order("name");
 
+    // Fetch all tables
     const { data: tables } = await supabase
         .from("tables")
         .select("id, name, number")
         .eq("event_id", eventId)
         .order("number");
 
+    // Fetch all pairings for this event
     const { data: allPairings } = await supabase
         .from("event_pairings")
         .select("player1_id, player2_id, table_number, round_number")
         .eq("event_id", eventId);
 
+    // Build history for pairing rules
     const { opponentHistory, tableHistory } = buildHistory(allPairings, roundNumber);
 
-    let unpaired = [...players];
+    /* ============================================================
+       Determine unpaired players + used tables
+       ============================================================ */
+    const pairedIds = new Set();
+    const usedTables = new Set();
+
+    allPairings.forEach(p => {
+        if (p.round_number === roundNumber) {
+            if (p.player1_id) pairedIds.add(p.player1_id);
+            if (p.player2_id) pairedIds.add(p.player2_id);
+            usedTables.add(p.table_number);
+        }
+    });
+
+    // Only players not already paired this round
+    let unpaired = players.filter(p => !pairedIds.has(p.id));
+
+    // Optional randomisation
+    if (window.autoPairRandomise) {
+        shuffle(unpaired);
+        window.autoPairRandomise = false;
+    }
+
+    /* ============================================================
+       Build preview pairings
+       ============================================================ */
     const previewPairings = [];
     const conflictList = [];
 
     for (let i = 0; i < tables.length; i++) {
+        const table = tables[i];
+
+        // Skip tables already paired
+        if (usedTables.has(table.number)) continue;
+
         if (unpaired.length < 2) break;
 
-        const table = tables[i];
         const tableNumber = table.number;
 
         let chosenP1 = null;
@@ -493,11 +571,9 @@ export async function autoPair(eventId, roundNumber) {
         }
 
         // If no valid pairing for this table, skip it
-        if (!chosenP1 || !chosenP2) {
-            continue;
-        }
+        if (!chosenP1 || !chosenP2) continue;
 
-        // Remove chosen players from unpaired
+        // Remove chosen players from unpaired list
         unpaired = unpaired.filter(p => p.id !== chosenP1.id && p.id !== chosenP2.id);
 
         previewPairings.push({
@@ -513,9 +589,18 @@ export async function autoPair(eventId, roundNumber) {
             player2_team: chosenP2.teams?.name || null
         });
 
-        conflictList.push([]); // we only accept valid pairings
+        conflictList.push([]); // valid pairing → no conflicts
     }
 
-    showAutoPairPreviewModal(eventId, roundNumber, previewPairings, conflictList, players);
-
+    /* ============================================================
+       Show preview modal
+       ============================================================ */
+    showAutoPairPreviewModal(
+        eventId,
+        roundNumber,
+        previewPairings,
+        conflictList,
+        players,
+        allPairings
+    );
 }
