@@ -19,6 +19,69 @@ function shuffle(array) {
     }
 }
 
+function attemptPairing(players, tables, allPairings, roundNumber) {
+    const { opponentHistory, tableHistory } = buildHistory(allPairings, roundNumber);
+
+    const pairedIds = new Set();
+    const usedTables = new Set();
+
+    allPairings.forEach(p => {
+        if (p.round_number === roundNumber) {
+            if (p.player1_id) pairedIds.add(p.player1_id);
+            if (p.player2_id) pairedIds.add(p.player2_id);
+            usedTables.add(p.table_number);
+        }
+    });
+
+    let unpaired = players.filter(p => !pairedIds.has(p.id));
+
+    const previewPairings = [];
+    const conflictList = [];
+
+    for (let table of tables) {
+        if (usedTables.has(table.number)) continue;
+        if (unpaired.length < 2) break;
+
+        let chosenP1 = null;
+        let chosenP2 = null;
+
+        for (let p1 of unpaired) {
+            const validOpponents = unpaired.filter(p2 => {
+                if (p2.id === p1.id) return false;
+                return validatePairing(p1, p2, table.number, opponentHistory, tableHistory) === null;
+            });
+
+            if (validOpponents.length > 0) {
+                chosenP1 = p1;
+                chosenP2 = validOpponents[0];
+                break;
+            }
+        }
+
+        if (!chosenP1 || !chosenP2) continue;
+
+        unpaired = unpaired.filter(p => p.id !== chosenP1.id && p.id !== chosenP2.id);
+
+        previewPairings.push({
+            event_id: table.event_id,
+            round_number: roundNumber,
+            table_name: table.name,
+            table_number: table.number,
+            player1_id: chosenP1.id,
+            player2_id: chosenP2.id,
+            player1_name: chosenP1.name,
+            player2_name: chosenP2.name,
+            player1_team: chosenP1.teams?.name || null,
+            player2_team: chosenP2.teams?.name || null
+        });
+
+        conflictList.push([]);
+    }
+
+    return { previewPairings, conflictList, unpaired };
+}
+
+
 /* ============================================================
    Render Pairings Table
    ============================================================ */
@@ -491,115 +554,51 @@ function showAutoPairPreviewModal(
 }
 
 export async function autoPair(eventId, roundNumber) {
-    // Fetch all enabled players
     const { data: players } = await supabase
         .from("profiles")
         .select("id, name, team_id, teams(name)")
         .eq("enabled", true)
         .order("name");
 
-    // Fetch all tables
     const { data: tables } = await supabase
         .from("tables")
-        .select("id, name, number")
+        .select("id, name, number, event_id")
         .eq("event_id", eventId)
         .order("number");
 
-    // Fetch all pairings for this event
     const { data: allPairings } = await supabase
         .from("event_pairings")
         .select("player1_id, player2_id, table_number, round_number")
         .eq("event_id", eventId);
 
-    // Build history for pairing rules
-    const { opponentHistory, tableHistory } = buildHistory(allPairings, roundNumber);
+    let attempt = 0;
+    let result;
 
-    /* ============================================================
-       Determine unpaired players + used tables
-       ============================================================ */
-    const pairedIds = new Set();
-    const usedTables = new Set();
+    while (attempt < 10) {
+        attempt++;
 
-    allPairings.forEach(p => {
-        if (p.round_number === roundNumber) {
-            if (p.player1_id) pairedIds.add(p.player1_id);
-            if (p.player2_id) pairedIds.add(p.player2_id);
-            usedTables.add(p.table_number);
+        // Shuffle players each attempt
+        const shuffledPlayers = [...players];
+        shuffle(shuffledPlayers);
+
+        result = attemptPairing(shuffledPlayers, tables, allPairings, roundNumber);
+        console.log(result);
+
+        if (result.unpaired.length === 0) {
+            break; // success
         }
-    });
-
-    // Only players not already paired this round
-    let unpaired = players.filter(p => !pairedIds.has(p.id));
-
-    // Optional randomisation
-    if (window.autoPairRandomise) {
-        shuffle(unpaired);
-        window.autoPairRandomise = false;
     }
 
-    /* ============================================================
-       Build preview pairings
-       ============================================================ */
-    const previewPairings = [];
-    const conflictList = [];
-
-    for (let i = 0; i < tables.length; i++) {
-        const table = tables[i];
-
-        // Skip tables already paired
-        if (usedTables.has(table.number)) continue;
-
-        if (unpaired.length < 2) break;
-
-        const tableNumber = table.number;
-
-        let chosenP1 = null;
-        let chosenP2 = null;
-
-        // Try each player as P1 until we find a valid opponent
-        for (let p1 of unpaired) {
-            const validOpponents = unpaired.filter(p2 => {
-                if (p2.id === p1.id) return false;
-                return validatePairing(p1, p2, tableNumber, opponentHistory, tableHistory) === null;
-            });
-
-            if (validOpponents.length > 0) {
-                chosenP1 = p1;
-                chosenP2 = validOpponents[0];
-                break;
-            }
-        }
-
-        // If no valid pairing for this table, skip it
-        if (!chosenP1 || !chosenP2) continue;
-
-        // Remove chosen players from unpaired list
-        unpaired = unpaired.filter(p => p.id !== chosenP1.id && p.id !== chosenP2.id);
-
-        previewPairings.push({
-            event_id: eventId,
-            round_number: roundNumber,
-            table_name: table.name,
-            table_number: table.number,
-            player1_id: chosenP1.id,
-            player2_id: chosenP2.id,
-            player1_name: chosenP1.name,
-            player2_name: chosenP2.name,
-            player1_team: chosenP1.teams?.name || null,
-            player2_team: chosenP2.teams?.name || null
-        });
-
-        conflictList.push([]); // valid pairing → no conflicts
+    if (result.unpaired.length > 0) {
+        alert("Auto-pairing failed after 10 attempts. Try again or adjust pairing rules.");
+        return;
     }
 
-    /* ============================================================
-       Show preview modal
-       ============================================================ */
     showAutoPairPreviewModal(
         eventId,
         roundNumber,
-        previewPairings,
-        conflictList,
+        result.previewPairings,
+        result.conflictList,
         players,
         allPairings
     );
