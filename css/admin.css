@@ -116,7 +116,8 @@ button:hover,
     background: var(--sc-bg-dark);
     border: 1px solid rgba(199,169,107,0.4);
     padding: 24px;
-    width: 480px;
+    width: 60%;
+    min-width: 480px;
     max-width: 90%;
     border-radius: 6px;
     box-shadow: 0 0 20px rgba(199,169,107,0.3);

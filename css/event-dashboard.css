@@ -272,13 +272,12 @@ body {
     width: 100%;
     background: #0f0f0f;
     border: 1px solid rgba(199,169,107,0.4);
-    padding: 14px 16px;
+    padding: 5px;
     border-radius: 6px;
     box-shadow: 0 0 14px rgba(0,0,0,0.6);
-
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 10px;
     text-align: center;
 }
 
@@ -286,13 +285,14 @@ body {
 .swing-region-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 5px;
 }
 
 .swing-region,
 .swing-total {
     text-align: center;
-    margin-bottom: 4px;
+    margin-bottom: 0px;
+    padding: 5px;
 }
 
 /* Region + Total names */
@@ -327,7 +327,7 @@ body {
     width: 22px;
     height: 22px;
     vertical-align: middle;
-    margin: 0 4px;
+    margin: 4px;
     filter: drop-shadow(0 0 4px rgba(199,169,107,0.5));
 }
 

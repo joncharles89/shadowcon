@@ -271,8 +271,12 @@ async function renderSwingScoreboard(eventId, roundNumber) {
     // Render each region
     regions.forEach(region => {
         const swing = region.swing || 0;
-        const cappedSwing = Math.max(-10, Math.min(10, swing));
-        const percent = ((cappedSwing + 10) / 20) * 100;
+        console.log(region.region + " - Total Swing: " + swing);
+        const swingcap = 7;
+        const cappedSwing = Math.max(-1 * swingcap, Math.min(swingcap, swing));
+        const percent = ((cappedSwing + swingcap) / (swingcap * 2)) * 100;
+
+        console.log(region.region + " - Total Percent: " + percent);
 
         const regionDiv = document.createElement("div");
         regionDiv.className = "swing-region";
