@@ -45,3 +45,20 @@ export async function logout() {
     await supabase.auth.signOut();
     window.location.href = '/pages/login.html';
 }
+
+export async function checkIfAdmin() {
+    const user = await getUser();
+    if (!user) return false;
+
+    const { data: adminRow, error } = await supabase
+        .from("admins")
+        .select("id")
+        .eq("id", user.id)
+        .single();
+
+    if (error && error.code !== "PGRST116") {
+        console.error("Admin check error:", error);
+    }
+
+    return !!adminRow;
+}

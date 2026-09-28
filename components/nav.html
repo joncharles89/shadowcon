@@ -7,10 +7,27 @@
         <!-- Desktop Navigation -->
         <ul class="nav-links">
             <li><a href="/index.html">Home</a></li>
-            <li><a href="/pages/event-details.html">Event Details</a></li>
+            <li class="nav-dropdown">
+                <button class="nav-dropdown-toggle">Event Details</button>
+                <ul class="nav-dropdown-menu">
+                    <li><a href="/pages/event-details.html#event-details">Event Details</a></li>
+                    <li><a href="/pages/event-details.html#army-building">Army Building</a></li>
+                    <li><a href="/pages/event-details.html#model-requirements">Model Requirements</a></li>
+                    <li><a href="/pages/event-details.html#date-location-facilities">Date, Location & Facilities</a></li>
+                    <li><a href="/pages/event-details.html#sportsmanship">Sportsmanship</a></li>
+                    <li><a href="/pages/event-details.html#schedule">Schedule</a></li>
+                    <li><a href="/pages/event-details.html#awards">Awards</a></li>
+                    <li><a href="/pages/event-details.html#interested">Interested?</a></li>
+                </ul>
+            </li>
             <li><a href="/pages/lore.html">Lore</a></li>
-            <li><a href="/pages/gallery.html">Gallery</a></li>
-            <li><a href="/pages/video.html">Video</a></li>
+            <li class="nav-dropdown">
+                <button class="nav-dropdown-toggle">Media</button>
+                <ul class="nav-dropdown-menu">
+                    <li><a href="/pages/gallery.html">Gallery</a></li>
+                    <li><a href="/pages/video.html">Video</a></li>
+                </ul>
+            </li>
             <li><a href="/pages/contact.html">Contact</a></li>
 
             <!-- Session-aware desktop item -->
@@ -51,10 +68,14 @@
                 <li><a href="/pages/event-details.html#interested">Interested?</a></li>
             </ul>
         </li>
-
         <li><a href="/pages/lore.html">Lore</a></li>
-        <li><a href="/pages/gallery.html">Gallery</a></li>
-        <li><a href="/pages/video.html">Video</a></li>
+        <li class="mobile-expandable">
+            <button class="expand-toggle">Media</button>
+            <ul class="mobile-submenu">
+                <li><a href="/pages/gallery.html">Gallery</a></li>
+                <li><a href="/pages/video.html">Video</a></li>
+            </ul>
+        </li>
         <li><a href="/pages/contact.html">Contact</a></li>
         
         <!-- Session-aware mobile item -->

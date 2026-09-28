@@ -53,7 +53,6 @@
     filter: drop-shadow(0 0 4px rgba(199,169,107,0.4));
 }
 
-
 .score-form-inline {
     margin-top: 14px;                /* was 20px */
     text-align: center;
@@ -73,3 +72,13 @@
     margin-top: 8px;                 /* was 12px */
 }
 
+.admin-select {
+    width: 100%;
+    padding: 8px;
+    background: #0f0f0f;
+    border: 1px solid rgba(199,169,107,0.4);
+    color: #e2dfd7;
+    font-family: "Cinzel", serif;
+    border-radius: 4px;
+    margin-top: 8px;
+}

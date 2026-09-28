@@ -1,5 +1,7 @@
 import { supabase } from '/js/supabaseClient.js';
 import { getUser } from '/js/auth.js';
+import { checkIfAdmin } from '/js/auth.js';
+
 
 /*
  * Set this to the UUID of the event shown on this page.
@@ -32,21 +34,9 @@ function getTeamIcon(teamObj) {
 
 async function loadEventInfo() {
     const root = document.getElementById('eventInfoRoot');
-
+    
     if (!root) {
         console.error('rounds.js: #eventInfoRoot was not found.');
-        return;
-    }
-
-    const user = await getUser();
-
-    if (!user) {
-        root.innerHTML = `
-            <div class="card">
-                <h2>You are not logged in</h2>
-                <p><a href="/pages/login.html">Login here</a></p>
-            </div>
-        `;
         return;
     }
 
@@ -57,6 +47,27 @@ async function loadEventInfo() {
             <div class="card">
                 <h2>Event not configured</h2>
                 <p>This page needs a valid event ID.</p>
+            </div>
+        `;
+        return;
+    }
+
+    const isAdmin = await checkIfAdmin();
+    if (isAdmin) {
+        renderImpersonationDropdown(eventId);
+    }
+
+    let user = await getUser();
+
+    if (window.impersonatedUserId) {
+        user = { id: window.impersonatedUserId };
+    }
+
+    if (!user) {
+        root.innerHTML = `
+            <div class="card">
+                <h2>You are not logged in</h2>
+                <p><a href="/pages/login.html">Login here</a></p>
             </div>
         `;
         return;
@@ -368,6 +379,39 @@ function attachScoreFormListeners() {
             }
         });
     });
+}
+
+async function renderImpersonationDropdown(eventId) {
+    const root = document.getElementById("adminImpersonateRoot");
+    if (!root) return;
+
+    // Fetch players for this event
+    const { data: players } = await supabase
+        .from("profiles")
+        .select("id, name")
+        .eq("enabled", true)
+        .order("name");
+
+    root.innerHTML = `
+        <div class="card" style="margin-bottom:20px;">
+            <label for="impersonateSelect" class="gold-heading">
+                Impersonate Player
+            </label>
+            <select id="impersonateSelect" class="admin-select">
+                <option value="">— Select a player —</option>
+                ${players.map(p => `
+                    <option value="${p.id}">${p.name}</option>
+                `).join("")}
+            </select>
+        </div>
+    `;
+
+    document.getElementById("impersonateSelect")
+        .addEventListener("change", async (e) => {
+            const impersonatedId = e.target.value || null;
+            window.impersonatedUserId = impersonatedId;
+            await loadEventInfo(); // reload page using impersonated user
+        });
 }
 
 function escapeHtml(value) {
