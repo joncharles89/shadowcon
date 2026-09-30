@@ -217,8 +217,8 @@ a {
 }
 
 .three-image-row img {
-    width: 100px;                 /* or whatever size you want */
-    height: auto;
+    width: auto;                 /* or whatever size you want */
+    height: 100px;
     display: block;
 }
 
