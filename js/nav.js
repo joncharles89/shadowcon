@@ -64,6 +64,17 @@ async function updateNavAuth() {
         mobileLinks.insertBefore(mobileRounds, mobileAuth);
     }
 
+    // Admin-only Shop link
+    if (isAdmin) {
+        const desktopShop = document.createElement('li');
+        desktopShop.innerHTML = `<a href="/pages/shop.html">Shop</a>`;
+        desktopLinks.insertBefore(desktopShop, desktopAuth);
+
+        const mobileShop = document.createElement('li');
+        mobileShop.innerHTML = `<a href="/pages/shop.html">Shop</a>`;
+        mobileLinks.insertBefore(mobileShop, mobileAuth);
+    }
+
     // Auth section
     if (user) {
         desktopAuth.innerHTML = `
