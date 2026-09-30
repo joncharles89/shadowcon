@@ -67,11 +67,11 @@ async function updateNavAuth() {
     // Admin-only Shop link
     if (isAdmin) {
         const desktopShop = document.createElement('li');
-        desktopShop.innerHTML = `<a href="/pages/shop.html">Shop</a>`;
+        desktopShop.innerHTML = `<a href="https://shadowcon.sumupstore.com/">Shop</a>`;
         desktopLinks.insertBefore(desktopShop, desktopAuth);
 
         const mobileShop = document.createElement('li');
-        mobileShop.innerHTML = `<a href="/pages/shop.html">Shop</a>`;
+        mobileShop.innerHTML = `<a href="https://shadowcon.sumupstore.com/">Shop</a>`;
         mobileLinks.insertBefore(mobileShop, mobileAuth);
     }
 
