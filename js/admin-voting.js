@@ -2,144 +2,348 @@ import { supabase } from '/js/supabaseClient.js';
 import { openModal, closeModal } from '/js/admin-modal.js';
 
 /* ============================================================
-   Render Voting Admin Section
+   Render Voting Admin
    ============================================================ */
 
-export async function renderVotingAdmin(currentEventId) {
+export async function renderVotingAdmin(eventId) {
     const root = document.getElementById("voting-admin");
     if (!root) return;
 
-    const { data: config } = await supabase
-        .from("voting_config")
-        .select("*")
-        .eq("event_id", currentEventId)
-        .order("vote_type");
+    // 1. Fetch players FIRST
+    const { data: players } = await supabase
+        .from("profiles")
+        .select("id, name, enabled")
+        .eq("enabled", true)
+        .order("name");
 
+    function playerName(id) {
+        const p = players.find(x => x.id === id);
+        return p ? p.name : "-";
+    }
+
+    // 2. Fetch votes AFTER players
+    const { data: coolest } = await supabase
+        .from("coolest_army_votes")
+        .select("*, profiles!coolest_army_votes_voter_id_fkey(name)")
+        .eq("event_id", eventId);
+
+    const { data: favourite } = await supabase
+        .from("favourite_coplayer_votes")
+        .select("*, profiles!favourite_coplayer_votes_voter_id_fkey(name)")
+        .eq("event_id", eventId);
+    
+    // 2b. Fetch missing votes for display
+    const { data: missing } = await supabase
+        .from("v_missing_votes")
+        .select("*")
+        .eq("event_id", eventId);
+
+    const coolestVoterIds = new Set(coolest.map(v => v.voter_id));
+    const favouriteVoterIds = new Set(favourite.map(v => v.voter_id));
+
+    const missingCoolest = players.filter(p => !coolestVoterIds.has(p.id));
+    const missingFavourite = players.filter(p => !favouriteVoterIds.has(p.id));
+
+    // 3. Render tables safely
     root.innerHTML = `
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>Vote Type</th>
-                    <th>Opens</th>
-                    <th>Closes</th>
-                    <th>Enabled</th>
-                    <th>Message</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${config.map(row => `
+        <div class="admin-section">
+            <h3>Coolest Army Votes</h3>
+            <button class="admin-btn" id="addCoolestVote">Add Vote</button>
+
+            <table class="admin-table">
+                <thead>
                     <tr>
-                        <td>${formatVoteType(row.vote_type)}</td>
-                        <td>${formatDate(row.opens_at)}</td>
-                        <td>${formatDate(row.closes_at)}</td>
-                        <td>${row.is_enabled ? "Yes" : "No"}</td>
-                        <td>${row.message || "-"}</td>
-                        <td>
-                            <button class="admin-btn" data-edit="${row.id}">Edit</button>
-                        </td>
+                        <th>Voter</th>
+                        <th>1st</th>
+                        <th>2nd</th>
+                        <th>3rd</th>
+                        <th>Actions</th>
                     </tr>
-                `).join("")}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    ${coolest.map(v => `
+                        <tr>
+                            <td>${v.profiles.name}</td>
+                            <td>${playerName(v.rank1_player_id)}</td>
+                            <td>${playerName(v.rank2_player_id)}</td>
+                            <td>${playerName(v.rank3_player_id)}</td>
+                            <td>
+                                <button class="admin-btn" data-edit-coolest="${v.id}">Edit</button>
+                                <button class="admin-btn" data-delete-coolest="${v.id}">Delete</button>
+                            </td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+
+            <h4 class="unpaired-title">Players Missing Coolest Army Vote</h4>
+            ${
+                missingCoolest.length === 0
+                    ? `<p class="no-unpaired">All enabled players have voted.</p>`
+                    : `
+                        <ul class="unpaired-list">
+                            ${missingCoolest.map(p => `
+                                <li>
+                                    ${p.name}
+                                    <button class="admin-btn" data-add-coolest="${p.id}" style="margin-left:10px;">
+                                        Add Vote
+                                    </button>
+                                </li>
+                            `).join("")}
+                        </ul>
+                    `
+            }
+        </div>
     `;
 
-    root.querySelectorAll("[data-edit]").forEach(btn => {
-        btn.addEventListener("click", () => openVotingEditModal(btn.dataset.edit, config));
+    root.innerHTML += `
+        <div class="admin-section">
+            <h3>Favourite Co‑Player Votes</h3>
+            <button class="admin-btn" id="addFavouriteVote">Add Vote</button>
+
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Voter</th>
+                        <th>Choice 1</th>
+                        <th>Choice 2</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${favourite.map(v => `
+                        <tr>
+                            <td>${v.profiles.name}</td>
+                            <td>${playerName(v.choice1_player_id)}</td>
+                            <td>${playerName(v.choice2_player_id)}</td>
+                            <td>
+                                <button class="admin-btn" data-edit-favourite="${v.id}">Edit</button>
+                                <button class="admin-btn" data-delete-favourite="${v.id}">Delete</button>
+                            </td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+
+            <h4 class="unpaired-title">Players Missing Favourite Co‑Player Vote</h4>
+            ${
+                missingFavourite.length === 0
+                    ? `<p class="no-unpaired">All enabled players have voted.</p>`
+                    : `
+                        <ul class="unpaired-list">
+                            ${missingFavourite.map(p => `
+                                <li>
+                                    ${p.name}
+                                    <button class="admin-btn" data-add-favourite="${p.id}" style="margin-left:10px;">
+                                        Add Vote
+                                    </button>
+                                </li>
+                            `).join("")}
+                        </ul>
+                    `
+            }
+        </div>
+    `;
+
+    /* ============================================================
+       Add/Edit/Delete Coolest Army Votes
+       ============================================================ */
+
+    document.getElementById("addCoolestVote").onclick = () =>
+        openCoolestModal(null, players, eventId);
+
+    root.querySelectorAll("[data-edit-coolest]").forEach(btn => {
+        btn.onclick = () => openCoolestModal(btn.dataset.editCoolest, players, eventId);
     });
+
+    root.querySelectorAll("[data-delete-coolest]").forEach(btn => {
+        btn.onclick = async () => {
+            await supabase.from("coolest_army_votes").delete().eq("id", btn.dataset.deleteCoolest);
+            renderVotingAdmin(eventId);
+        };
+    });
+
+    /* ============================================================
+       Add/Edit/Delete Favourite Co‑Player Votes
+       ============================================================ */
+
+    document.getElementById("addFavouriteVote").onclick = () =>
+        openFavouriteModal(null, players, eventId);
+
+    root.querySelectorAll("[data-edit-favourite]").forEach(btn => {
+        btn.onclick = () => openFavouriteModal(btn.dataset.editFavourite, players, eventId);
+    });
+
+    root.querySelectorAll("[data-delete-favourite]").forEach(btn => {
+        btn.onclick = async () => {
+            await supabase.from("favourite_coplayer_votes").delete().eq("id", btn.dataset.deleteFavourite);
+            renderVotingAdmin(eventId);
+        };
+    });
+
+    // Buttons for missing vote additions
+    root.querySelectorAll("[data-add-coolest]").forEach(btn => {
+        btn.onclick = () => openCoolestModal(null, players, eventId, btn.dataset.addCoolest);
+    });
+
+    root.querySelectorAll("[data-add-favourite]").forEach(btn => {
+        btn.onclick = () => openFavouriteModal(null, players, eventId, btn.dataset.addFavourite);
+    });
+
 }
 
 /* ============================================================
-   Helpers
+   Coolest Army Modal
    ============================================================ */
 
-function formatVoteType(type) {
-    if (type === "coolest_army") return "Coolest Army";
-    if (type === "favourite_coplayer") return "Favourite Co‑Player";
-    return type;
-}
+async function openCoolestModal(id, players, eventId, preselectVoterId = null) {
+    let existing = null;
 
-function formatDate(ts) {
-    return new Date(ts).toLocaleString();
-}
-
-/* ============================================================
-   Edit Modal
-   ============================================================ */
-
-function openVotingEditModal(id, config) {
-    const row = config.find(c => c.id === id);
+    if (id) {
+        const { data } = await supabase
+            .from("coolest_army_votes")
+            .select("*")
+            .eq("id", id)
+            .single();
+        existing = data;
+    }
 
     openModal(`
-        <h3>Edit Voting Window</h3>
+        <h3>${id ? "Edit" : "Add"} Coolest Army Vote</h3>
 
-        <label>Vote Type</label>
-        <input type="text" value="${formatVoteType(row.vote_type)}" disabled>
-
-        <label>Opens At</label>
-        <input id="edit-opens" type="datetime-local" value="${toLocalInput(row.opens_at)}">
-
-        <label>Closes At</label>
-        <input id="edit-closes" type="datetime-local" value="${toLocalInput(row.closes_at)}">
-
-        <label>Enabled</label>
-        <select id="edit-enabled">
-            <option value="true" ${row.is_enabled ? "selected" : ""}>Enabled</option>
-            <option value="false" ${!row.is_enabled ? "selected" : ""}>Disabled</option>
+        <label>Voter</label>
+        <select id="vote-voter">
+            ${players.map(p => `
+                <option value="${p.id}" ${existing?.voter_id === p.id || preselectVoterId === p.id ? "selected" : ""}>
+                    ${p.name}
+                </option>
+            `).join("")}
         </select>
 
-        <label>Message (optional)</label>
-        <input id="edit-message" type="text" value="${row.message || ""}">
+        <label>1st Place</label>
+        <select id="vote-r1">
+            ${players.map(p => `
+                <option value="${p.id}" ${existing?.rank1_player_id === p.id ? "selected" : ""}>
+                    ${p.name}
+                </option>
+            `).join("")}
+        </select>
+
+        <label>2nd Place</label>
+        <select id="vote-r2">
+            ${players.map(p => `
+                <option value="${p.id}" ${existing?.rank2_player_id === p.id ? "selected" : ""}>
+                    ${p.name}
+                </option>
+            `).join("")}
+        </select>
+
+        <label>3rd Place</label>
+        <select id="vote-r3">
+            ${players.map(p => `
+                <option value="${p.id}" ${existing?.rank3_player_id === p.id ? "selected" : ""}>
+                    ${p.name}
+                </option>
+            `).join("")}
+        </select>
 
         <div class="admin-modal-buttons">
             <button class="admin-modal-btn" id="cancelModal">Cancel</button>
-            <button class="admin-modal-btn" id="saveVoting">Save</button>
+            <button class="admin-modal-btn" id="saveVote">Save</button>
         </div>
     `);
 
     document.getElementById("cancelModal").onclick = closeModal;
 
-    document.getElementById("saveVoting").onclick = async () => {
-        const opens = document.getElementById("edit-opens").value;
-        const closes = document.getElementById("edit-closes").value;
-        const enabled = document.getElementById("edit-enabled").value === "true";
-        const message = document.getElementById("edit-message").value.trim();
-
+    document.getElementById("saveVote").onclick = async () => {
         const payload = {
-            opens_at: new Date(opens).toISOString(),
-            closes_at: new Date(closes).toISOString(),
-            is_enabled: enabled,
-            message: message || null
+            event_id: eventId,
+            voter_id: document.getElementById("vote-voter").value,
+            rank1_player_id: document.getElementById("vote-r1").value,
+            rank2_player_id: document.getElementById("vote-r2").value,
+            rank3_player_id: document.getElementById("vote-r3").value
         };
 
-        console.log("🔍 PATCH Debug — ID:", id);
-        console.log("🔍 PATCH Debug — Payload:", payload);
-
-        const { data, error } = await supabase
-            .from("voting_config")
-            .update(payload)
-            .eq("id", id);
-
-        console.log("🔍 PATCH Debug — Response Data:", data);
-        console.log("🔍 PATCH Debug — Response Error:", error);
-
-        if (error) {
-            alert("Supabase rejected the update. Check console for details.");
-            return;
+        if (id) {
+            await supabase.from("coolest_army_votes").update(payload).eq("id", id);
+        } else {
+            await supabase.from("coolest_army_votes").insert(payload);
         }
 
         closeModal();
-        renderVotingAdmin(row.event_id);
+        renderVotingAdmin(eventId);
     };
 }
 
 /* ============================================================
-   Convert timestamp → datetime-local input format
+   Favourite Co‑Player Modal
    ============================================================ */
 
-function toLocalInput(ts) {
-    const d = new Date(ts);
-    const pad = n => n.toString().padStart(2, "0");
+async function openFavouriteModal(id, players, eventId, preselectVoterId = null) {
+    let existing = null;
 
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    if (id) {
+        const { data } = await supabase
+            .from("favourite_coplayer_votes")
+            .select("*")
+            .eq("id", id)
+            .single();
+        existing = data;
+    }
+
+    openModal(`
+        <h3>${id ? "Edit" : "Add"} Favourite Co‑Player Vote</h3>
+
+        <label>Voter</label>
+        <select id="vote-voter">
+            ${players.map(p => `
+                <option value="${p.id}" ${existing?.voter_id === p.id || preselectVoterId === p.id ? "selected" : ""}>
+                    ${p.name}
+                </option>
+            `).join("")}
+        </select>
+
+        <label>Choice 1</label>
+        <select id="vote-c1">
+            ${players.map(p => `
+                <option value="${p.id}" ${existing?.choice1_player_id === p.id ? "selected" : ""}>
+                    ${p.name}
+                </option>
+            `).join("")}
+        </select>
+
+        <label>Choice 2</label>
+        <select id="vote-c2">
+            ${players.map(p => `
+                <option value="${p.id}" ${existing?.choice2_player_id === p.id ? "selected" : ""}>
+                    ${p.name}
+                </option>
+            `).join("")}
+        </select>
+
+        <div class="admin-modal-buttons">
+            <button class="admin-modal-btn" id="cancelModal">Cancel</button>
+            <button class="admin-modal-btn" id="saveVote">Save</button>
+        </div>
+    `);
+
+    document.getElementById("cancelModal").onclick = closeModal;
+
+    document.getElementById("saveVote").onclick = async () => {
+        const payload = {
+            event_id: eventId,
+            voter_id: document.getElementById("vote-voter").value,
+            choice1_player_id: document.getElementById("vote-c1").value,
+            choice2_player_id: document.getElementById("vote-c2").value
+        };
+
+        if (id) {
+            await supabase.from("favourite_coplayer_votes").update(payload).eq("id", id);
+        } else {
+            await supabase.from("favourite_coplayer_votes").insert(payload);
+        }
+
+        closeModal();
+        renderVotingAdmin(eventId);
+    };
 }
