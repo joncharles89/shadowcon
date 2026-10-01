@@ -51,11 +51,17 @@ export async function loadProfile() {
                     <strong>Army:</strong><br>${profileData.army_name || "(none set)"}
                 </div>
 
-                <a href="/pages/team.html" style="text-decoration:none; color:inherit;">
-                    <div class="team-button">
-                        <strong>Team:</strong><br>${profileData.team || "(none set)"}
+                ${profileData.team ? `
+                    <a href="/pages/team.html" style="text-decoration:none; color:inherit;">
+                        <div class="team-button">
+                            <strong>Team:</strong><br>${profileData.team}
+                        </div>
+                    </a>
+                ` : `
+                    <div class="team-button" style="cursor:default; opacity:0.7;">
+                        <strong>Team:</strong><br>(none set)
                     </div>
-                </a>
+                `}
             ` : `
                 <div class="profile-field">
                     <strong>No profile data found.</strong><br>
