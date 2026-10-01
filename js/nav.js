@@ -68,10 +68,16 @@ async function updateNavAuth() {
     if (isAdmin) {
         const desktopShop = document.createElement('li');
         desktopShop.innerHTML = `<a href="https://shadowcon.sumupstore.com/">Shop</a>`;
+        const desktopVoting = document.createElement('li');
+        desktopVoting.innerHTML = `<a href="/pages/voting.html">Voting</a>`;
+        desktopLinks.insertBefore(desktopVoting, desktopAuth);
         desktopLinks.insertBefore(desktopShop, desktopAuth);
 
         const mobileShop = document.createElement('li');
         mobileShop.innerHTML = `<a href="https://shadowcon.sumupstore.com/">Shop</a>`;
+        const mobileVoting = document.createElement('li');
+        mobileVoting.innerHTML = `<a href="/pages/voting.html">Voting</a>`;
+        mobileLinks.insertBefore(mobileVoting, mobileAuth);
         mobileLinks.insertBefore(mobileShop, mobileAuth);
     }
 
