@@ -2,6 +2,8 @@ import { supabase } from '/js/supabaseClient.js';
 import { renderPairingsTable, showCreatePairingModal, autoPair } from '/js/admin-pairings.js';
 import { renderTeamsAdmin } from '/js/admin-teams.js';
 import { renderPlayersAdmin } from '/js/admin-players.js';
+import { renderVotingAdmin } from '/js/admin-voting.js';
+
 
 let currentEventId = null;
 let currentRoundNumber = 1;
@@ -25,6 +27,8 @@ export async function initAdmin() {
             if (tab === "pairings") loadPairingsTab();
             if (tab === "teams") loadTeamsTab();
             if (tab === "players") loadPlayersTab();
+            if (tab === "voting") loadVotingTab();
+
         });
     });
 }
@@ -113,6 +117,12 @@ async function loadPlayersTab() {
     const content = document.getElementById('admin-content');
     content.innerHTML = `<h2>Players</h2><div id="players-admin"></div>`;
     await renderPlayersAdmin();
+}
+
+async function loadVotingTab() {
+    const content = document.getElementById('admin-content');
+    content.innerHTML = `<h2>Voting Configuration</h2><div id="voting-admin"></div>`;
+    await renderVotingAdmin(currentEventId);
 }
 
 initAdmin();

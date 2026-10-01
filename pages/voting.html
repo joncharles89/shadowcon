@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/auth.css">
     <link rel="stylesheet" href="/css/team.css">
+    <link rel="stylesheet" href="/css/voting.css">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
@@ -24,17 +25,14 @@
     <script type="module" src="/js/nav.js"></script>
 
     <main class="content">
-        <div id="profile-root"></div>
+        <h1>Voting</h1>
+        <div id="voting-root"></div>
     </main>
 
     <div id="layout-end"></div>
 
     <script src="/js/main.js"></script>
-
-    <script type="module">
-        import { loadProfile } from '/js/voting.js';
-        loadProfile();
-    </script>
+    <script type="module" src="/js/voting.js"></script>
 
 </body>
 </html>

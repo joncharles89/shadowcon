@@ -1,0 +1,32 @@
+.vote-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.vote-group label {
+    margin-bottom: 6px;
+    font-family: "Cinzel", serif;
+    color: #c7a96b;
+}
+
+.vote-group select {
+    padding: 8px;
+    background: #111;
+    border: 1px solid rgba(199,169,107,0.3);
+    color: #e2dfd7;
+    font-family: "Merriweather", serif;
+}
+
+/* Subtle notification */
+.vote-notice {
+    background: #111;
+    border: 1px solid #c7a96b;
+    padding: 10px 16px;
+    margin-bottom: 20px;
+    color: #c7a96b;
+    font-family: "Cinzel", serif;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    transition: opacity 0.4s ease;
+}
