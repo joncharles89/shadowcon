@@ -129,7 +129,7 @@ function openVotingEditModal(id, config) {
         }
 
         closeModal();
-        renderVotingAdmin(row.event_id);
+        renderVotingConfigAdmin(row.event_id);
     };
 }
 

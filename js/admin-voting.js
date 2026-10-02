@@ -44,8 +44,8 @@ export async function renderVotingAdmin(eventId) {
     const missingCoolest = players.filter(p => !coolestVoterIds.has(p.id));
     const missingFavourite = players.filter(p => !favouriteVoterIds.has(p.id));
 
-    // 3. Render tables safely
-    root.innerHTML = `
+    // 3. Build full HTML first
+    const html = `
         <div class="admin-section">
             <h3>Coolest Army Votes</h3>
             <button class="admin-btn" id="addCoolestVote">Add Vote</button>
@@ -94,9 +94,6 @@ export async function renderVotingAdmin(eventId) {
                     `
             }
         </div>
-    `;
-
-    root.innerHTML += `
         <div class="admin-section">
             <h3>Favourite Co‑Player Votes</h3>
             <button class="admin-btn" id="addFavouriteVote">Add Vote</button>
@@ -144,6 +141,9 @@ export async function renderVotingAdmin(eventId) {
             }
         </div>
     `;
+
+    // 4. Insert HTML once
+    root.innerHTML = html;
 
     /* ============================================================
        Add/Edit/Delete Coolest Army Votes
