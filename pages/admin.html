@@ -23,16 +23,42 @@
     <div id="nav-placeholder"></div>
     <script type="module" src="/js/nav.js"></script>
 
-    <main class="content">
-        <h1>Admin Dashboard</h1>
+    <!-- Desktop Sidebar -->
+    <nav class="admin-sidebar">
+        <div class="admin-sidebar-title">Admin</div>
 
-        <div class="admin-tabs">
-            <button data-tab="pairings" class="active">Pairings</button>
-            <!-- <button data-tab="teams">Teams</button> -->
-            <button data-tab="players">Players</button>
-            <button data-tab="voting-config">Voting Config</button>
-            <button data-tab="voting">Voting</button>
+        <button data-section="pairings" class="admin-nav-item active">Pairings</button>
+        <button data-section="teams" class="admin-nav-item">Teams</button>
+        <button data-section="players" class="admin-nav-item">Players</button>
+
+        <div class="admin-nav-group-title">Voting</div>
+        <button data-section="voting-config" class="admin-nav-item">Voting Config</button>
+        <button data-section="voting" class="admin-nav-item">Voting Admin</button>
+
+        <div class="admin-nav-group-title">Results</div>
+        <button data-section="league" class="admin-nav-item">League Tables</button>
+    </nav>
+
+    <!-- Mobile Sub‑Nav -->
+    <div class="admin-mobile-nav">
+        <button id="adminMobileToggle">Admin Menu ▼</button>
+
+        <div id="adminMobileMenu" class="admin-mobile-menu">
+            <button data-section="pairings">Pairings</button>
+            <button data-section="teams">Teams</button>
+            <button data-section="players">Players</button>
+
+            <div class="admin-mobile-group">Voting</div>
+            <button data-section="voting-config">Voting Config</button>
+            <button data-section="voting">Voting Admin</button>
+
+            <div class="admin-mobile-group">Results</div>
+            <button data-section="league">League Tables</button>
         </div>
+    </div>
+
+    <main class="admin-content">
+        <h1>Admin Dashboard</h1>
 
         <div id="admin-content"></div>
     </main>

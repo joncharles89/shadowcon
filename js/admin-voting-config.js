@@ -23,7 +23,7 @@ export async function renderVotingConfigAdmin(currentEventId) {
                     <th>Opens</th>
                     <th>Closes</th>
                     <th>Enabled</th>
-                    <th>Message</th>
+                    <!--<th>Message</th>-->
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -34,7 +34,7 @@ export async function renderVotingConfigAdmin(currentEventId) {
                         <td>${formatDate(row.opens_at)}</td>
                         <td>${formatDate(row.closes_at)}</td>
                         <td>${row.is_enabled ? "Yes" : "No"}</td>
-                        <td>${row.message || "-"}</td>
+                        <!--<td>${row.message || "-"}</td>-->
                         <td>
                             <button class="admin-btn" data-edit="${row.id}">Edit</button>
                         </td>
@@ -88,8 +88,8 @@ function openVotingEditModal(id, config) {
             <option value="false" ${!row.is_enabled ? "selected" : ""}>Disabled</option>
         </select>
 
-        <label>Message (optional)</label>
-        <input id="edit-message" type="text" value="${row.message || ""}">
+        <!--<label>Message (optional)</label>
+        <input id="edit-message" type="text" value="${row.message || ""}">-->
 
         <div class="admin-modal-buttons">
             <button class="admin-modal-btn" id="cancelModal">Cancel</button>

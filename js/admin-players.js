@@ -8,6 +8,7 @@ export async function renderPlayersAdmin() {
     const { data: players } = await supabase
         .from("profiles")
         .select("id, name, army_name, team_id, enabled")
+        .order("enabled", { ascending: false })
         .order("name");
 
     const { data: teams } = await supabase

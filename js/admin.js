@@ -11,29 +11,65 @@ let currentEventId = null;
 let currentRoundNumber = 1;
 
 export async function initAdmin() {
-    const tabs = document.querySelectorAll('.admin-tabs button');
+    const navItems = document.querySelectorAll('.admin-nav-item');
+
+    const mobileMenu = document.getElementById("adminMobileMenu");
+    const mobileItems = mobileMenu ? mobileMenu.querySelectorAll('button') : [];
+
+    console.log("📱 Mobile admin items found:", mobileItems.length);
 
     const params = new URLSearchParams(window.location.search);
     currentEventId = params.get("event") || null;
     currentRoundNumber = Number(params.get("round")) || 1;
 
+    // Default section
     loadPairingsTab();
 
-    tabs.forEach(btn => {
+    function activate(section) {
+        // Clear active states
+        navItems.forEach(i => i.classList.remove('active'));
+        mobileItems.forEach(i => i.classList.remove('active'));
+
+        // Highlight desktop
+        document
+            .querySelector(`.admin-nav-item[data-section="${section}"]`)
+            ?.classList.add('active');
+
+        // Highlight mobile
+        document
+            .querySelector(`#adminMobileMenu button[data-section="${section}"]`)
+            ?.classList.add('active');
+
+        // Load section
+        if (section === "pairings") loadPairingsTab();
+        if (section === "teams") loadTeamsTab();
+        if (section === "players") loadPlayersTab();
+        if (section === "voting-config") loadVotingConfigTab();
+        if (section === "voting") loadVotingTab();
+        if (section === "league") loadLeagueTab();
+    }
+
+    navItems.forEach(btn => {
+        btn.addEventListener('click', () => activate(btn.dataset.section));
+    });
+
+    mobileItems.forEach(btn => {
         btn.addEventListener('click', () => {
-            tabs.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const tab = btn.dataset.tab;
-
-            if (tab === "pairings") loadPairingsTab();
-            if (tab === "teams") loadTeamsTab();
-            if (tab === "players") loadPlayersTab();
-            if (tab === "voting-config") loadVotingConfigTab();
-            if (tab === "voting") loadVotingTab();
+            console.log("📱 Mobile admin click:", btn.dataset.section);
+            activate(btn.dataset.section);
+            mobileMenu.style.display = "none";
         });
     });
+
+    const toggle = document.getElementById("adminMobileToggle");
+    if (toggle) {
+        toggle.addEventListener("click", () => {
+            const isOpen = mobileMenu.style.display === "flex";
+            mobileMenu.style.display = isOpen ? "none" : "flex";
+        });
+    }
 }
+
 
 async function loadPairingsTab() {
     const content = document.getElementById('admin-content');
@@ -133,5 +169,12 @@ async function loadVotingTab() {
     await renderVotingAdmin(currentEventId);
 }
 
+async function loadLeagueTab() {
+    const content = document.getElementById('admin-content');
+    content.innerHTML = `<h2>League Tables</h2><div id="league-admin"></div>`;
+    await renderLeagueAdmin(currentEventId);
+}
 
-initAdmin();
+document.addEventListener("DOMContentLoaded", () => {
+    initAdmin();
+});
