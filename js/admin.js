@@ -4,8 +4,7 @@ import { renderTeamsAdmin } from '/js/admin-teams.js';
 import { renderPlayersAdmin } from '/js/admin-players.js';
 import { renderVotingConfigAdmin } from '/js/admin-voting-config.js';
 import { renderVotingAdmin } from '/js/admin-voting.js';
-
-
+import { renderLeagueAdmin } from '/js/admin-league.js';
 
 let currentEventId = null;
 let currentRoundNumber = 1;
@@ -171,7 +170,11 @@ async function loadVotingTab() {
 
 async function loadLeagueTab() {
     const content = document.getElementById('admin-content');
-    content.innerHTML = `<h2>League Tables</h2><div id="league-admin"></div>`;
+    content.innerHTML = `
+        <h2>League Tables</h2>
+        <div id="league-admin"></div>
+    `;
+
     await renderLeagueAdmin(currentEventId);
 }
 

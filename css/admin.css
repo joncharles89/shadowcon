@@ -339,3 +339,39 @@ button:hover,
     color: #7fc97f;
     font-size: 0.9rem;
 }
+
+/*
+    Leagues
+-*/
+
+.league-section {
+    margin-bottom: 30px;
+}
+
+.league-toggle {
+    width: 100%;
+    text-align: left;
+    padding: 12px;
+    background: var(--sc-bg-dark);
+    border: 1px solid var(--sc-gold-soft);
+    color: var(--sc-text-light);
+    font-family: "Cinzel", serif;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: all 0.25s ease;
+}
+
+.league-toggle:hover {
+    border-color: var(--sc-gold);
+    color: var(--sc-gold);
+}
+
+.league-table {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.35s ease;
+}
+
+.league-table:not(.collapsed) {
+    max-height: 1000px; /* plenty of room */
+}
