@@ -100,6 +100,13 @@
             eyeIcon.classList.toggle('closed', !isPassword);
         });
 
+        passwordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                loginBtn.click();
+            }
+        });
+
     </script>
 
 </body>
