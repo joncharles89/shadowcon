@@ -23,8 +23,8 @@ export async function initTeamPage() {
 
     // 2. Load profile
     const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('team')
+        .from('v_profile')
+        .select('team_name')
         .eq('id', user.id)
         .single();
 
@@ -35,14 +35,14 @@ export async function initTeamPage() {
     }
 
     // 3. No team assigned
-    if (!profile.team) {
+    if (!profile.team_name) {
         teamMessage.textContent = "You have not yet been allocated to a team.";
         teamMessage.style.color = "#c7a96b";
         return;
     }
 
     // 4. Team assigned → apply background + show image
-    const team = profile.team.toLowerCase();
+    const team = profile.team_name.toLowerCase();
 
     teamPageWrapper.classList.add(`team-${team}`);
 
@@ -71,6 +71,6 @@ export async function initTeamPage() {
     teamImageWrapper.innerHTML = `
         <img src="${imgSrc}" 
              alt="Team ${team}" 
-             style="max-width:300px;">
+             style="max-height:150px;">
     `;
 }

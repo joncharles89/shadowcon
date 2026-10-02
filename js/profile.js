@@ -1,9 +1,8 @@
 import { supabase } from '/js/supabaseClient.js';
 import { getUser, logout } from '/js/auth.js';
 
-/**
- * Load and render the user's profile into #profile-root
- */
+const currentEventId = "369a1d4a-283f-41d6-bfc2-f83cee4b7818"; 
+
 export async function loadProfile() {
     const root = document.getElementById('profile-root');
     if (!root) return;
@@ -20,18 +19,26 @@ export async function loadProfile() {
         return;
     }
 
-    // Try to fetch profile data
     let profileData = null;
+    let team = null;
+
     try {
         const { data } = await supabase
-            .from('profiles')
-            .select('*')
+            .from('v_profile')
+            .select(`
+                id,
+                name,
+                army_name,
+                team_name,
+                enabled
+            `)
             .eq('id', user.id)
             .single();
 
         profileData = data;
+
     } catch (e) {
-        // No profile table or no row — ignore
+        // ignore
     }
 
     root.innerHTML = `
@@ -51,10 +58,10 @@ export async function loadProfile() {
                     <strong>Army:</strong><br>${profileData.army_name || "(none set)"}
                 </div>
 
-                ${profileData.team ? `
+                ${profileData.team_name ? `
                     <a href="/pages/team.html" style="text-decoration:none; color:inherit;">
                         <div class="team-button">
-                            <strong>Team:</strong><br>${profileData.team}
+                            <strong>Team:</strong><br>${profileData.team_name}
                         </div>
                     </a>
                 ` : `
@@ -68,6 +75,7 @@ export async function loadProfile() {
                     Create a 'profiles' table to store user info.
                 </div>
             `}
+
             <a href="/pages/update-profile.html" class="btn" style="margin-top: 10px; margin-bottom: 12px; display:block;">
                 Update Profile
             </a>
