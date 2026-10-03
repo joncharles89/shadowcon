@@ -26,7 +26,7 @@ function teamPriority(team) {
     if (team === "Emperor") return 1;
     if (team === "Kalla") return 2;
     if (team === "Rebels") return 3;
-    return 99; // fallback
+    return 99;
 }
 
 function normalizeTeams(p) {
@@ -45,10 +45,8 @@ function normalizeTeams(p) {
         }
     ];
 
-    // Sort by priority
     players.sort((a, b) => teamPriority(a.team) - teamPriority(b.team));
 
-    // Write back
     p.player1_id = players[0].id;
     p.player1_name = players[0].name;
     p.player1_team = players[0].team;
@@ -63,12 +61,12 @@ function normalizeTeams(p) {
 function regionToClass(regionName) {
     return regionName
         .toLowerCase()
-        .replace(/\s+/g, "-")      // spaces → hyphens
-        .replace(/[^a-z0-9-]/g, ""); // remove weird characters
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "");
 }
 
 /* ---------------------------------------------
-   Fetch round end time from Supabase
+   Fetch round end time
 --------------------------------------------- */
 async function fetchRoundEnd(eventId, roundNumber) {
     const { data, error } = await supabase
@@ -149,7 +147,7 @@ async function renderTables(eventId, roundNumber) {
 
         const entry = document.createElement("div");
         entry.className = "table-entry";
-        
+
         const regionClass = regionToClass(p.region);
         entry.classList.add(regionClass);
 
@@ -162,21 +160,13 @@ async function renderTables(eventId, roundNumber) {
 
         entry.innerHTML = `
             <span class="table-entry-title">${p.table_number} - ${p.table_name}</span>
-            <span class="table-col swing">
-                ${swing1 ? swing1 : ""}
-            </span>
+            <span class="table-col swing">${swing1 || ""}</span>
             <img class="team-icon-small" src="${getTeamIcon(p.player1_team)}">
-            <span class="table-col player2">
-                ${p.player1_name}
-            </span>
+            <span class="table-col player2">${p.player1_name}</span>
             <span class="vs-text">vs</span>
-            <span class="table-col player2">
-                ${p.player2_name}
-            </span>
+            <span class="table-col player2">${p.player2_name}</span>
             <img class="team-icon-small" src="${getTeamIcon(p.player2_team)}">
-            <span class="table-col swing">
-                ${swing2 ? swing2 : ""}
-            </span>
+            <span class="table-col swing">${swing2 || ""}</span>
         `;
 
         container.appendChild(entry);
@@ -202,6 +192,7 @@ async function renderRoundPicker(eventId, activeRound) {
         return;
     }
 
+    // Round buttons
     data.forEach(r => {
         const btn = document.createElement("button");
         btn.className = "round-picker-btn";
@@ -218,9 +209,37 @@ async function renderRoundPicker(eventId, activeRound) {
         picker.appendChild(btn);
     });
 
+    /* ---------------------------------------------
+       Sidebar Tabs
+    --------------------------------------------- */
+    const tabsWrapper = document.createElement("div");
+    tabsWrapper.className = "sidebar-tabs";
+
+    const tabNames = [
+        { id: "pairings", label: "P" },
+        { id: "battleplan", label: "B" },
+        { id: "map", label: "M" }
+    ];
+
+    tabNames.forEach((t, index) => {
+        const tabBtn = document.createElement("button");
+        tabBtn.className = "sidebar-tab-btn";
+        tabBtn.dataset.tab = t.id;
+        tabBtn.textContent = t.label;
+
+        if (index === 0) tabBtn.classList.add("active");
+
+        tabsWrapper.appendChild(tabBtn);
+    });
+
+    picker.appendChild(tabsWrapper);
+
     document.body.appendChild(picker);
 }
 
+/* ---------------------------------------------
+   Swing Scoreboard
+--------------------------------------------- */
 async function renderSwingScoreboard(eventId, roundNumber) {
     const scoreboard = document.getElementById("swing-scoreboard");
     scoreboard.innerHTML = "";
@@ -241,7 +260,6 @@ async function renderSwingScoreboard(eventId, roundNumber) {
         return;
     }
 
-    // Combine rounds into cumulative totals
     const regionTotals = {};
     let totalRebels = 0;
     let totalEmperors = 0;
@@ -258,25 +276,19 @@ async function renderSwingScoreboard(eventId, roundNumber) {
         totalEmperors += row.totalemperorscore || 0;
     });
 
-    // Convert totals into cumulative swing
     const regions = Object.keys(regionTotals).map(region => {
         const rebels = regionTotals[region].rebels;
         const emperors = regionTotals[region].emperors;
-
-        const swing = rebels - emperors; // corrected logic
+        const swing = rebels - emperors;
 
         return { region, swing };
     });
 
-    // Render each region
     regions.forEach(region => {
         const swing = region.swing || 0;
-        console.log(region.region + " - Total Swing: " + swing);
         const swingcap = 7;
-        const cappedSwing = Math.max(-1 * swingcap, Math.min(swingcap, swing));
+        const cappedSwing = Math.max(-swingcap, Math.min(swingcap, swing));
         const percent = ((cappedSwing + swingcap) / (swingcap * 2)) * 100;
-
-        console.log(region.region + " - Total Percent: " + percent);
 
         const regionDiv = document.createElement("div");
         regionDiv.className = "swing-region";
@@ -306,7 +318,6 @@ async function renderSwingScoreboard(eventId, roundNumber) {
         regionGrid.appendChild(regionDiv);
     });
 
-    // TOTAL SWING SUMMARY
     const totalSwing = totalRebels - totalEmperors;
     const cappedTotal = Math.max(-10, Math.min(10, totalSwing));
     const totalPercent = ((cappedTotal + 10) / 20) * 100;
@@ -339,28 +350,68 @@ async function renderSwingScoreboard(eventId, roundNumber) {
 }
 
 /* ---------------------------------------------
+   Sidebar Tab Logic
+--------------------------------------------- */
+function initTabs() {
+    const tabs = document.querySelectorAll('.sidebar-tab-btn');
+
+    const views = {
+        pairings: document.getElementById('view-pairings'),
+        battleplan: document.getElementById('view-battleplan'),
+        map: document.getElementById('view-map')
+    };
+
+    tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabs.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const tab = btn.dataset.tab;
+
+            Object.keys(views).forEach(key => {
+                views[key].style.display = (key === tab) ? 'block' : 'none';
+            });
+
+            if (tab === 'battleplan') {
+                loadBattleplan();
+            }
+        });
+    });
+}
+
+/* ---------------------------------------------
+   Load Battleplan HTML
+--------------------------------------------- */
+async function loadBattleplan() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const round = urlParams.get('round') || 1;
+
+    try {
+        const html = await fetch(`/battleplans/round-${round}.html`).then(r => r.text());
+        document.getElementById('battleplan-container').innerHTML = html;
+    } catch (err) {
+        document.getElementById('battleplan-container').innerHTML =
+            `<p style="color:#c76b6b;">Battleplan not found for round ${round}</p>`;
+    }
+}
+
+/* ---------------------------------------------
    Init
 --------------------------------------------- */
 document.addEventListener("DOMContentLoaded", async () => {
     const eventId = getEventFromURL();
     const roundNumber = getRoundFromURL();
 
-    // Round title
     document.getElementById("round-title").textContent = `Round ${roundNumber}`;
 
-    // Round picker
     await renderRoundPicker(eventId, roundNumber);
 
-    // Round end time
+    initTabs();
+
     const roundEndISO = await fetchRoundEnd(eventId, roundNumber);
 
-    // Render tables
     await renderTables(eventId, roundNumber);
-
-    // Render regional swing
     await renderSwingScoreboard(eventId, roundNumber);
 
-    // Start countdown
     startCountdown(roundEndISO);
 });
-

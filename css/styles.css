@@ -530,6 +530,12 @@ a {
     color: black;
 }
 
+.parchment li {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    color: black;
+}
+
 .parchment h1, .parchment h2 {
     margin-top: 1.5rem;
     margin-bottom: 1rem;

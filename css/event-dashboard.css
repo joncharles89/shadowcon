@@ -75,6 +75,92 @@ body {
     width: 100%;
 }
 
+/* Left-side round picker strip */
+.round-picker {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;       /* full viewport height */
+    width: 70px;
+
+    background: #0f0f0f;
+    border-right: 2px solid rgba(199,169,107,0.4);
+    box-shadow: 0 0 14px rgba(0,0,0,0.6);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* buttons start at top */
+    padding-top: 20px;           /* small breathing space */
+    gap: 12px;
+
+    z-index: 900;
+}
+
+/* Round buttons */
+.round-picker-btn {
+    width: 40px;
+    height: 40px;
+    background: #111;
+    border: 1px solid rgba(199,169,107,0.4);
+    color: #e2dfd7;
+    font-family: "Cinzel", serif;
+    font-size: 1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.round-picker-btn:hover {
+    border-color: #c7a96b;
+    color: #c7a96b;
+}
+
+.round-picker-btn.active {
+    background: #1a1a1a;
+    border-color: #c7a96b;
+    color: #c7a96b;
+}
+
+/* sidebar tabs */
+.sidebar-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
+    align-items: center;
+}
+
+.sidebar-tab-btn {
+    width: 40px;
+    height: 40px;
+    padding: 6px 0;
+    background: #111;
+    border: 1px solid rgba(199,169,107,0.4);
+    color: #e2dfd7;
+    font-family: "Cinzel", serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.sidebar-tab-btn:hover {
+    border-color: #c7a96b;
+    color: #c7a96b;
+}
+
+.sidebar-tab-btn.active {
+    background: #1a1a1a;
+    border-color: #c7a96b;
+    color: #c7a96b;
+}
+
+
+
 #round-title {
     font-family: "Cinzel", serif;
     color: #c7a96b;
@@ -187,54 +273,6 @@ body {
     .bottom-section {
         grid-template-columns: 1fr;
     }
-}
-
-/* Left-side round picker strip */
-.round-picker {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;       /* full viewport height */
-    width: 70px;
-
-    background: #0f0f0f;
-    border-right: 2px solid rgba(199,169,107,0.4);
-    box-shadow: 0 0 14px rgba(0,0,0,0.6);
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start; /* buttons start at top */
-    padding-top: 20px;           /* small breathing space */
-    gap: 12px;
-
-    z-index: 900;
-}
-
-/* Round buttons */
-.round-picker-btn {
-    width: 40px;
-    height: 40px;
-    background: #111;
-    border: 1px solid rgba(199,169,107,0.4);
-    color: #e2dfd7;
-    font-family: "Cinzel", serif;
-    font-size: 1rem;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-}
-
-.round-picker-btn:hover {
-    border-color: #c7a96b;
-    color: #c7a96b;
-}
-
-.round-picker-btn.active {
-    background: #1a1a1a;
-    border-color: #c7a96b;
-    color: #c7a96b;
 }
 
 .team-icon-small {
@@ -393,4 +431,26 @@ body {
     justify-content: center;
     width: 30px; /* fixed width */
     min-width: 30px;
+}
+
+/* Map */
+#view-map {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 120px); /* or whatever height remains below your header */
+    gap: 10px;
+}
+
+.map-top {
+    flex: 3; /* 75% */
+    background: #0f0f0f;
+    border: 1px solid rgba(199,169,107,0.4);
+    border-radius: 6px;
+}
+
+.map-bottom {
+    flex: 1; /* 25% */
+    background: #0f0f0f;
+    border: 1px solid rgba(199,169,107,0.4);
+    border-radius: 6px;
 }

@@ -23,38 +23,47 @@
     <!-- Main Content Wrapper -->
     <main class="dashboard-content">
 
-        <div class="dashboard-root">
+    <!-- PAIRINGS VIEW -->
+    <div class="dashboard-root" id="view-pairings">
+        <header class="dashboard-header">
+            <h1 id="round-title" class="gold-heading">Round 1</h1>
+        </header>
 
-            <!-- Header: Round title only -->
-            <header class="dashboard-header">
-                <h1 id="round-title" class="gold-heading">Round 1</h1>
-            </header>
+        <section class="tables-section">
+            <div id="tables-container" class="tables-columns"></div>
+        </section>
 
-            <!-- Tables: two columns -->
-            <section class="tables-section">
-                <div id="tables-container" class="tables-columns"></div>
-            </section>
+        <section class="bottom-section">
+            <div class="swing-scoreboard card" id="swing-scoreboard"></div>
+            <div class="timer-block card">
+                <div class="timer-label">Time Remaining</div>
+                <div id="timer" class="timer-value">00:00</div>
+            </div>
+            <div class="info-box card" id="info-box-bottom-right"></div>
+        </section>
+    </div>
 
-            <!-- Bottom: info boxes left/right, timer in centre -->
-            <section class="bottom-section">
-                <div class="swing-scoreboard card" id="swing-scoreboard">
-                    <h2 class="gold-heading">Region Swing</h2>
-                </div>
-                
-                <div class="timer-block card">
-                    <div class="timer-label">Time Remaining</div>
-                    <div id="timer" class="timer-value">00:00</div>
-                </div>
+    <!-- BATTLEPLAN VIEW -->
+    <div class="dashboard-root" id="view-battleplan" style="display:none;">
+        <header class="dashboard-header">
+            <h1 id="round-title" class="gold-heading">Round 1</h1>
+        </header>
 
-                <div class="info-box card" id="info-box-bottom-right">
-                    <h2 class="gold-heading">Useful info box</h2>
-                    <p>We can put other bits here, not sure quite what yet but could be relevant bits for the round or reminders to vote etc.</p>
-                </div>
-            </section>
+        <div id="battleplan-container"></div>
+    </div>
 
-        </div>
+    <!-- MAP VIEW -->
+    <div class="dashboard-root" id="view-map" style="display:none;">
+        <header class="dashboard-header">
+            <h1 id="round-title" class="gold-heading">Round 1</h1>
+        </header>
+        
+        <div class="map-top"></div>
+        <div class="map-bottom"></div>
+    </div>
 
-    </main>
+</main>
+
 
     <!-- Dashboard Logic -->
     <script type="module" src="/js/event-dashboard.js"></script>
