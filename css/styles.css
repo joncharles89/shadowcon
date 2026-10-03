@@ -609,3 +609,43 @@ a {
     border-color: #c7a96b;
     color: #c7a96b;
 }
+
+.faq-container {
+    margin-bottom: 20px;
+}
+
+.faq-toggle {
+    width: 100%;
+    background: #0f0f0f;
+    border: 1px solid rgba(199,169,107,0.4);
+    color: #c7a96b;
+    font-family: "Cinzel", serif;
+    font-size: 1.2rem;
+    padding: 12px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.faq-toggle:hover {
+    border-color: #c7a96b;
+    color: #e2dfd7;
+}
+
+.faq-icon {
+    font-size: 1.4rem;
+    transition: transform 0.2s ease;
+}
+
+.faq-toggle[aria-expanded="true"] .faq-icon {
+    transform: rotate(45deg); /* + becomes × */
+}
+
+.faq-content {
+    margin-top: 10px;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}

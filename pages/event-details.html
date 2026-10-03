@@ -35,6 +35,28 @@
             <img src="/img/factions/Rebels.svg" alt="Rebel Forces">
             <img src="/img/factions/Kalla.svg" alt="Kalla's Strike Team">
         </div>
+
+        <div class="faq-container">
+            <button class="faq-toggle" aria-expanded="false">
+                <span>Frequently Asked Questions</span>
+                <span class="faq-icon">+</span>
+            </button>
+
+            <div class="faq-content" hidden>
+                <div class="parchment">
+                    <h2>FAQs</h2>
+                    <ul>
+                        <li><b>Are named characters allowed?</b><br>Yes, capped at 400 points.</li>
+                        <li><b>Are manifestations allowed?</b><br>Yes.</li>
+                        <li><b>Do points need to be spread evenly between battalions?</b><br>No, but be aware that not all battalions may 
+                            be on the battlefield at the same time...<br>There must be at least one unit in each battalion though.</li>
+                        <li><b>Which command and magic modules will we be using?</b><br>The latest found in GHB 2026-27, reach out if you need any
+                            further clarifications.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
         
         <div class="section-divider"></div>
         
@@ -45,11 +67,11 @@
             <ul>
                 <li>Maximum army points: 1,250</li>
                 <li>Your army must be split into 3 battalions; <b>FORERUNNERS</b>, <b>WARHOST</b> and <b>GUARDIANS</b>.</li>
-                <li>Each section must have at least 1 unit within it, normal army building regiment rules do not apply.
+                <li>Each battalion must have at least 1 unit within it, normal army building regiment rules do not apply.
                     <ul>
                         <li>If a unit warscroll contains rules that refer to a regiment, treat those rules as applying to 
                         the battalion instead.</li>
-                        <li>The points per battlion do not need to evenly spread. Please be aware that not all battalions 
+                        <li>The points per battalion do not need to evenly spread. Please be aware that not all battalions 
                         may be on the battlefield at the same time though.</li>
                     </ul>
                 </li>
@@ -177,6 +199,22 @@
     <div id="layout-end"></div>
 
     <script src="/js/main.js"></script>
+    <script>
+        const faqToggle = document.querySelector('.faq-toggle');
+        const faqContent = document.querySelector('.faq-content');
+
+        faqToggle.addEventListener('click', () => {
+            const expanded = faqToggle.getAttribute('aria-expanded') === 'true';
+
+            faqToggle.setAttribute('aria-expanded', !expanded);
+
+            if (expanded) {
+                faqContent.hidden = true;
+            } else {
+                faqContent.hidden = false;
+            }
+        });
+    </script>
 </body>
 </html>
 
