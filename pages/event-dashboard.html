@@ -19,51 +19,47 @@
     <meta name="theme-color" content="#111111">
 </head>
 
-<body>
+<body class="event-dashboard">
     <!-- Main Content Wrapper -->
     <main class="dashboard-content">
 
-    <!-- PAIRINGS VIEW -->
-    <div class="dashboard-root" id="view-pairings">
+        <!-- GLOBAL HEADER -->
         <header class="dashboard-header">
             <h1 id="round-title" class="gold-heading">Round 1</h1>
         </header>
 
-        <section class="tables-section">
-            <div id="tables-container" class="tables-columns"></div>
-        </section>
+        <!-- PAIRINGS VIEW -->
+        <div class="dashboard-root" id="view-pairings">
+            <section class="tables-section">
+                <div id="tables-container" class="tables-columns"></div>
+            </section>
 
-        <section class="bottom-section">
-            <div class="swing-scoreboard card" id="swing-scoreboard"></div>
-            <div class="timer-block card">
-                <div class="timer-label">Time Remaining</div>
-                <div id="timer" class="timer-value">00:00</div>
+            <section class="bottom-section">
+                <div class="swing-scoreboard card" id="swing-scoreboard"></div>
+                <div class="timer-block card">
+                    <div class="timer-label">Time Remaining</div>
+                    <div id="timer" class="timer-value">00:00</div>
+                </div>
+                <div class="info-box card" id="info-box-bottom-right"></div>
+            </section>
+        </div>
+
+        <!-- BATTLEPLAN VIEW -->
+        <div class="dashboard-root" id="view-battleplan" style="display:none;">
+            <div id="battleplan-container"></div>
+        </div>
+
+        <!-- MAP VIEW -->
+        <div class="dashboard-root" id="view-map" style="display:none;">
+            <div class="map-top">
+                <img src="/img/map/TestMap.png" alt="World Map" class="map-image">
             </div>
-            <div class="info-box card" id="info-box-bottom-right"></div>
-        </section>
-    </div>
+            <div class="map-bottom">
+                <div id="map-swing-scoreboard" class="map-swing-scoreboard"></div>
+            </div>
+        </div>
 
-    <!-- BATTLEPLAN VIEW -->
-    <div class="dashboard-root" id="view-battleplan" style="display:none;">
-        <header class="dashboard-header">
-            <h1 id="round-title" class="gold-heading">Round 1</h1>
-        </header>
-
-        <div id="battleplan-container"></div>
-    </div>
-
-    <!-- MAP VIEW -->
-    <div class="dashboard-root" id="view-map" style="display:none;">
-        <header class="dashboard-header">
-            <h1 id="round-title" class="gold-heading">Round 1</h1>
-        </header>
-        
-        <div class="map-top"></div>
-        <div class="map-bottom"></div>
-    </div>
-
-</main>
-
+    </main>
 
     <!-- Dashboard Logic -->
     <script type="module" src="/js/event-dashboard.js"></script>

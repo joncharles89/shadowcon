@@ -1,16 +1,16 @@
 :root {
-    --region1: rgba(199, 169, 107, 0.15);
-    --region2: rgba(107, 199, 169, 0.15);
-    --region3: rgba(169, 107, 199, 0.15);
-    --region4: rgba(199, 107, 107, 0.15);
-    --region5: rgba(107, 107, 199, 0.15);
+    --region1: rgba(199, 107, 107, 0.15);
+    --region2: rgba(169, 107, 199, 0.15);
+    --region3: rgba(107, 199, 169, 0.15);
+    --region4: rgba(107, 107, 199, 0.15);
+    --region5: rgba(199, 169, 107, 0.15);
 
     /* Bold versions for completed pairings */
-    --region1-bold: rgba(199, 169, 107, 0.35);
-    --region2-bold: rgba(107, 199, 169, 0.35);
-    --region3-bold: rgba(169, 107, 199, 0.35);
-    --region4-bold: rgba(199, 107, 107, 0.35);
-    --region5-bold: rgba(107, 107, 199, 0.35);
+    --region1-bold: rgba(199, 107, 107, 0.35);
+    --region2-bold: rgba(169, 107, 199, 0.35);
+    --region3-bold: rgba(107, 199, 169, 0.35);
+    --region4-bold: rgba(107, 107, 199, 0.35);
+    --region5-bold: rgba(199, 169, 107, 0.35);
 }
 
 .table-entry.region-1 { background: var(--region1); }
@@ -31,6 +31,16 @@
 .swing-region.region-4 { background: var(--region4); }
 .swing-region.region-5 { background: var(--region5); }
 
+html.event-dashboard,
+body.event-dashboard {
+    height: 100%;
+}
+
+body.event-dashboard {
+    display: flex;
+    flex-direction: column;
+}
+
 /* Root */
 .dashboard-root {
     margin-left: 70px; /* match sidebar width */
@@ -50,9 +60,10 @@ body {
 }
 
 .dashboard-content {
-    margin: 15px;
-    position: relative;
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
 }
 
 .dashboard-content h1 {
@@ -69,10 +80,12 @@ body {
 
 /* Header */
 .dashboard-header {
+    flex: 0 0 auto; /* header stays fixed height */
     text-align: center;
     padding-top: 0px;
-    padding-bottom: 2px;
-    width: 100%;
+    padding-bottom: 10px;
+    margin-left: 70px;
+    width: calc(100% - 70px);
 }
 
 /* Left-side round picker strip */
@@ -369,6 +382,18 @@ body {
     filter: drop-shadow(0 0 4px rgba(199,169,107,0.5));
 }
 
+.swing-region-icon {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    margin: 4px;
+}
+
+.placeholder-icon {
+    opacity: 0;        /* invisible */
+    pointer-events: none;
+}
+
 /* Bars (region + total identical) */
 .swing-bar,
 .swing-total-bar {
@@ -391,6 +416,7 @@ body {
     background: #c7a96b;
     border-radius: 3px;
     box-shadow: 0 0 6px rgba(199,169,107,0.6);
+    transform: translateX(-50%);
 }
 
 /* Centre line — NEW */
@@ -437,15 +463,17 @@ body {
 #view-map {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 120px); /* or whatever height remains below your header */
+    flex: 1;        /* fill remaining vertical space naturally */
     gap: 10px;
+    overflow: hidden; /* prevents scrollbars */
 }
 
 .map-top {
-    flex: 3; /* 75% */
-    background: #0f0f0f;
-    border: 1px solid rgba(199,169,107,0.4);
-    border-radius: 6px;
+    flex: 3; /* 75% of the available height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 .map-bottom {
@@ -453,4 +481,16 @@ body {
     background: #0f0f0f;
     border: 1px solid rgba(199,169,107,0.4);
     border-radius: 6px;
+}
+
+.map-image {
+    max-height: 75vh;
+    max-width: 100%;
+    object-fit: contain;
+    border: 1px solid rgba(199,169,107,0.4);
+    border-radius: 6px;
+}
+
+.map-swing-scoreboard .swing-region-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }

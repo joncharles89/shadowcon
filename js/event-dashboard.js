@@ -6,8 +6,20 @@ const TEAM_ICONS = {
     "Kalla": "/img/factions/Kalla.svg"
 };
 
+const REGION_ICONS = {
+    "Region 1": "/img/region/Lumineth.svg",
+    "Region 2": "/img/region/Vamps.svg",
+    "Region 3": "/img/region/Orruk.svg",
+    "Region 4": "/img/region/Human.svg",
+    "Region 5": "/img/region/KO.svg",
+}
+
 function getTeamIcon(teamName) {
     return TEAM_ICONS[teamName] || null;
+}
+
+function getRegionIcon(regionName) {
+    return REGION_ICONS[regionName] || null;
 }
 
 function getEventFromURL() {
@@ -240,8 +252,8 @@ async function renderRoundPicker(eventId, activeRound) {
 /* ---------------------------------------------
    Swing Scoreboard
 --------------------------------------------- */
-async function renderSwingScoreboard(eventId, roundNumber) {
-    const scoreboard = document.getElementById("swing-scoreboard");
+async function renderSwingScoreboard(eventId, roundNumber, targetId = "swing-scoreboard", includeTotal = true) {
+    const scoreboard = document.getElementById(targetId);
     scoreboard.innerHTML = "";
 
     const regionGrid = document.createElement("div");
@@ -295,7 +307,11 @@ async function renderSwingScoreboard(eventId, roundNumber) {
         regionDiv.classList.add(regionToClass(region.region));
 
         regionDiv.innerHTML = `
-            <div class="swing-region-name">${region.region}</div>
+            <div class="swing-region-name">
+                <img src="${getRegionIcon(region.region)}" class="swing-region-icon">
+                ${region.region}
+                <img class="swing-region-icon placeholder-icon" alt="">
+            </div>
 
             <div class="swing-bar-wrapper">
                 <div class="swing-label">
@@ -326,7 +342,11 @@ async function renderSwingScoreboard(eventId, roundNumber) {
     totalDiv.className = "swing-total";
 
     totalDiv.innerHTML = `
-        <div class="swing-total-label">Total Swing</div>
+        <div class="swing-total-label">
+            <img class="swing-region-icon placeholder-icon" alt="">
+            Total Swing
+            <img class="swing-region-icon placeholder-icon" alt="">
+        </div>
 
         <div class="swing-total-bar-wrapper">
             <div class="swing-label">
@@ -346,7 +366,9 @@ async function renderSwingScoreboard(eventId, roundNumber) {
         </div>
     `;
 
-    regionGrid.appendChild(totalDiv);
+    if (includeTotal) {
+        regionGrid.appendChild(totalDiv);
+    }
 }
 
 /* ---------------------------------------------
@@ -396,6 +418,32 @@ async function loadBattleplan() {
 }
 
 /* ---------------------------------------------
+    Load Round Info HTML            
+--------------------------------------------- */
+
+async function loadRoundInfo(roundNumber) {
+    const target = document.getElementById("info-box-bottom-right");
+    if (!target) return;
+
+    try {
+        const response = await fetch(`/round-info/round${roundNumber}.html`);
+        
+        if (!response.ok) {
+            target.innerHTML = `<p>No info available for Round ${roundNumber}.</p>`;
+            return;
+        }
+
+        const html = await response.text();
+        target.innerHTML = html;
+
+    } catch (err) {
+        console.error("Error loading round info:", err);
+        target.innerHTML = `<p>Error loading round info.</p>`;
+    }
+}
+
+
+/* ---------------------------------------------
    Init
 --------------------------------------------- */
 document.addEventListener("DOMContentLoaded", async () => {
@@ -411,7 +459,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const roundEndISO = await fetchRoundEnd(eventId, roundNumber);
 
     await renderTables(eventId, roundNumber);
-    await renderSwingScoreboard(eventId, roundNumber);
+
+    await renderSwingScoreboard(eventId, roundNumber); // pairings page
+    await loadRoundInfo(roundNumber);
+
+    await renderSwingScoreboard(eventId, roundNumber, "map-swing-scoreboard", false); // map page
 
     startCountdown(roundEndISO);
 });
