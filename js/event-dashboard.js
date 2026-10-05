@@ -246,6 +246,25 @@ async function renderRoundPicker(eventId, activeRound) {
 
     picker.appendChild(tabsWrapper);
 
+    /* ---------------------------------------------
+       Return to admin dashboard button
+    --------------------------------------------- */
+    const adminWrapper = document.createElement("div");
+    adminWrapper.className = "sidebar-tabs";
+    const adminBtn = document.createElement("a");
+    adminBtn.className = "sidebar-tab-btn";
+    adminBtn.href = "/pages/admin.html";
+    adminBtn.style.textDecoration = "none";
+    adminBtn.style.color = "inherit";
+    adminBtn.style.display = "flex";
+    adminBtn.style.alignItems = "center";
+    adminBtn.style.justifyContent = "center";
+    adminBtn.textContent = "A";
+    adminWrapper.appendChild(adminBtn);
+
+    picker.appendChild(adminWrapper);
+    
+
     document.body.appendChild(picker);
 }
 

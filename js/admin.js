@@ -5,6 +5,8 @@ import { renderPlayersAdmin } from '/js/admin-players.js';
 import { renderVotingConfigAdmin } from '/js/admin-voting-config.js';
 import { renderVotingAdmin } from '/js/admin-voting.js';
 import { renderLeagueAdmin } from '/js/admin-league.js';
+import { loadRoundsSection } from "./admin-rounds.js";
+
 
 let currentEventId = null;
 let currentRoundNumber = 1;
@@ -43,6 +45,7 @@ export async function initAdmin() {
         if (section === "pairings") loadPairingsTab();
         if (section === "teams") loadTeamsTab();
         if (section === "players") loadPlayersTab();
+        if (section === "rounds") loadRoundsSection(currentEventId);
         if (section === "voting-config") loadVotingConfigTab();
         if (section === "voting") loadVotingTab();
         if (section === "league") loadLeagueTab();

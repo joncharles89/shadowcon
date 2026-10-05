@@ -484,7 +484,7 @@ body {
 }
 
 .map-image {
-    max-height: 75vh;
+    max-height: 70vh;
     max-width: 100%;
     object-fit: contain;
     border: 1px solid rgba(199,169,107,0.4);
