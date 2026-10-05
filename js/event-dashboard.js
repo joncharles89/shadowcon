@@ -263,7 +263,6 @@ async function renderRoundPicker(eventId, activeRound) {
     adminWrapper.appendChild(adminBtn);
 
     picker.appendChild(adminWrapper);
-    
 
     document.body.appendChild(picker);
 }
